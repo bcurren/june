@@ -20,7 +20,7 @@ Screw.Unit(function() {
 
 
     describe("#create", function() {
-      it("builds an object with all the methods the #declared_methods of the Set", function() {
+      it("builds an instance of the Set's Tuple constructor with all of the methods declared for the Set", function() {
         var user = User.create();
         expect(user.foo).to(equal, User.Tuple.prototype.foo)
         expect(user.foo()).to(equal, "foo");
