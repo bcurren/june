@@ -1,8 +1,8 @@
 require("/vendor/jquery-1.2.6.js");
 require("set");
-require("primitive_tuple");
 require("set_configuration");
 require("attribute");
+require("field");
 
 Screw.Unit(function() {
   before(function() {
