@@ -2,29 +2,6 @@ require("/specs/june_spec_helper");
 
 Screw.Unit(function() {
   describe("Set", function() {
-    var User;
-
-    before(function() {
-      User = new Set(function(configuration) {
-        with(configuration) {
-          attributes({
-            'first_name': 'string',
-            'age': 'integer'
-          });
-
-          methods({
-            foo: function() {
-              return "foo";
-            },
-
-            bar: function() {
-              return "bar";
-            }
-          });
-        }
-      })
-    });
-
     describe("metaprogrammatic declarations", function() {
       var tuple;
       before(function() {
@@ -56,9 +33,17 @@ Screw.Unit(function() {
     });
 
     describe("#create", function() {
-      it("builds an instance of the Set's Tuple constructor", function() {
-        var user = User.create();
+      var user;
+      before(function() {
+        user = User.create();
+      });
+
+      it("builds an instance of the Set's PrimitiveTuple constructor", function() {
         expect(user.constructor).to(equal, User.Tuple);
+      });
+
+      it("assigns #set on the instantiated PrimitiveTuple to self", function() {
+        expect(user.set).to(equal, User);
       });
     });
   });
