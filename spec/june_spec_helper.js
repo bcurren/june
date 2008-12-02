@@ -3,6 +3,8 @@ require("set");
 require("set_configuration");
 require("attribute");
 require("field");
+require("predicates");
+require("predicates/equal_to");
 
 Screw.Unit(function() {
   before(function() {

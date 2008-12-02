@@ -78,17 +78,25 @@ Screw.Unit(function() {
     });
 
     describe("#create", function() {
-      var user;
+      var tuple;
       before(function() {
-        user = User.create();
+        tuple = User.create({
+          age: 25,
+          first_name: "Ryan"
+        });
       });
 
       it("builds an instance of the Set's PrimitiveTuple constructor", function() {
-        expect(user.constructor).to(equal, User.Tuple);
+        expect(tuple.constructor).to(equal, User.Tuple);
       });
 
       it("assigns #set on the instantiated PrimitiveTuple to self", function() {
-        expect(user.set).to(equal, User);
+        expect(tuple.set).to(equal, User);
+      });
+
+      it("assigns the field values for the given attributes hash", function() {
+        expect(tuple.first_name()).to(equal, "Ryan")
+        expect(tuple.age()).to(equal, 25)
       });
     });
   });
