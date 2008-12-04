@@ -1,4 +1,4 @@
-first_namespace :screw do
+namespace :screw do
   task :run do
     dir = File.dirname(__FILE__)
     implementation_path = "#{dir}/lib"

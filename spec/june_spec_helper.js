@@ -1,5 +1,6 @@
 require("/vendor/jquery-1.2.6.js");
 require("set");
+require("selection");
 require("set_configuration");
 require("attribute");
 require("field");
@@ -26,6 +27,13 @@ Screw.Unit(function() {
         });
       }
     });
+
+    User.create({first_name: "Dan", age: 21})
+    User.create({first_name: "Bob", age: 21})
+    User.create({first_name: "Joe", age: 21})
+    User.create({first_name: "Alice", age: 22})
+    User.create({first_name: "Jean", age: 22})
+
   });
 
 

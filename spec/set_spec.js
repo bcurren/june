@@ -98,6 +98,10 @@ Screw.Unit(function() {
         expect(tuple.first_name()).to(equal, "Ryan")
         expect(tuple.age()).to(equal, 25)
       });
+
+      it("adds the created object to #tuples", function() {
+        expect(User.tuples().indexOf(tuple)).to_not(equal, -1);
+      });
     });
   });
 });
