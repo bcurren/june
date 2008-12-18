@@ -77,6 +77,21 @@ Screw.Unit(function() {
       });
     });
 
+    describe("#find", function() {
+      describe("when passed the id of a tuple in the Set", function() {
+        it("returns the tuple with that id", function() {
+          var user = User.create({id: "george", first_name: "George"});
+          expect(User.find("george")).to(equal, user);
+        });
+      });
+
+      describe("when passed an id that does not belong to a tuple in the Set", function() {
+        it("returns null", function() {
+
+        });
+      });
+    });
+
     describe("#create", function() {
       var tuple;
       before(function() {
