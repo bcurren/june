@@ -1,4 +1,5 @@
 require("/vendor/jquery-1.2.6.js");
+require("relation_methods");
 require("set");
 require("inner_join");
 require("selection");
@@ -8,7 +9,9 @@ require("attribute");
 require("field");
 require("set_projection");
 require("predicates");
+require("predicates/predicate_methods");
 require("predicates/equal_to");
+require("predicates/not_equal_to");
 
 Screw.Unit(function() {
   before(function() {
@@ -19,13 +22,6 @@ Screw.Unit(function() {
           'first_name': 'string',
           'age': 'integer'
         });
-
-
-        has_many("pets");
-
-        relates_to_many("pet_species", function() {
-          return this.pets.join(Species).where(Pet.species_id.eq(Species.id)).project(Species);
-        })
 
         methods({
           foo: function() {

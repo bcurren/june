@@ -7,7 +7,7 @@ Screw.Unit(function() {
     before(function() {
       operand = User.join(Pet).on(Pet.owner_id.eq(User.id));
       projected_set = Pet;
-      projection = new Projection(operand, projected_set);
+      projection = new SetProjection(operand, projected_set);
     });
 
     describe("#tuples", function() {
