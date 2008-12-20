@@ -15,8 +15,8 @@ Screw.Unit(function() {
       it("includes all CompoundTuples in the cartesean product of the #tuples of the operands that match #predicate", function() {
         var tuples = join.tuples();
         expect(tuples).to_not(be_empty);
-        jQuery.each(tuples, function(i, tuple) {
-          expect(predicate.evaluate(tuple)).to(equal, true);
+        jQuery.each(tuples, function() {
+          expect(predicate.evaluate(this)).to(equal, true);
         });
       });
     });
