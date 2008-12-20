@@ -12,8 +12,13 @@ Screw.Unit(function() {
 
     describe("#tuples", function() {
       it("extracts the tuples belonging to the #projected_set from the CompoundTuples in by its #operand", function() {
-        var tuples = projection.tuples();
+
+
+        var t = operand.tuples()[0];
+        console.debug(t.tuple_for_set(Pet));
+
         var expected_tuples = Pet.where(Pet.owner_id.neq(null)).tuples();
+        var tuples = projection.tuples();
 
         expect(tuples).to(equal, expected_tuples);
       });

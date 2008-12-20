@@ -48,6 +48,24 @@ Screw.Unit(function() {
           });
         });
       });
+
+      describe("when #operand_1 is null and #operand_2 is an Attribute", function() {
+        before(function() {
+          predicate = new Predicates.EqualTo(null, User.first_name);
+        });
+
+        describe("when passed a Tuple with a field value for the Attribute that is null", function() {
+          it("returns true", function() {
+            expect(predicate.evaluate(User.create({first_name: null}))).to(equal, true);
+          });
+        });
+
+        describe("when passed a Tuple with a field value for the Attribute that is not null", function() {
+          it("returns false", function() {
+            expect(predicate.evaluate(User.create({first_name: "Nathan"}))).to(equal, false);
+          });
+        });
+      });
     });
   });
 });

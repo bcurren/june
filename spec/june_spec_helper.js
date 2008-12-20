@@ -1,5 +1,6 @@
 require("/vendor/jquery-1.2.6.js");
 require("relation_methods");
+require("tuple_methods");
 require("set");
 require("inner_join");
 require("selection");
@@ -40,7 +41,17 @@ Screw.Unit(function() {
         attributes({
           'id': 'string',
           'name': 'string',
-          'owner_id': 'integer'
+          'owner_id': 'string',
+          'species_id': 'string'
+        });
+      }
+    });
+
+    Species = new Set(function(configuration) {
+      with(configuration) {
+        attributes({
+          'id': 'string',
+          'name': 'string',
         });
       }
     });
@@ -51,16 +62,20 @@ Screw.Unit(function() {
     User.create({id: "alice", first_name: "Alice", age: 22});
     User.create({id: "jean", first_name: "Jean", age: 22});
 
-    Pet.create({id: "fido", owner_id: "dan"});
-    Pet.create({id: "cleo", owner_id: "dan"});
-    Pet.create({id: "blue", owner_id: "bob"});
-    Pet.create({id: "stray", owner_id: null});
+    Pet.create({id: "fido", name: "Fido", owner_id: "dan", species_id: "dog"});
+    Pet.create({id: "cleo", name: "Cleo", owner_id: "dan", species_id: "fish"});
+    Pet.create({id: "blue", name: "Blue", owner_id: "bob", species_id: "dog"});
+    Pet.create({id: "stray", name: "Unknown", owner_id: null, species_id: "dog"});
+
+    Species.create({id: "dog", name: "Dog"});
+    Species.create({id: "fish", name: "Fish"});
   });
 
 
   after(function() {
     User = undefined;
     Pet = undefined;
+    Species00 = undefined;
   });
 });
 
