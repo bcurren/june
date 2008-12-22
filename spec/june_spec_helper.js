@@ -28,6 +28,10 @@ Screw.Unit(function() {
           return Pet.where(Pet.owner_id.eq(this.id()));
         });
 
+        relates_to_one("pet", function() {
+          return this.pets_relation;
+        }),
+
         methods({
           foo: function() {
             return "foo";

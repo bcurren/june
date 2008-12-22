@@ -60,8 +60,26 @@ Screw.Unit(function() {
           });
           expect(results).to(equal, expected_results);
         });
+
+        it("assigns the relation defined in the given function to the #{relation_name}_relation field on the tuple", function() {
+          expect(tuple.pets_relation.tuples()).to(equal, tuple.pets());
+        });
+      });
+    });
+
+    describe(".relates_to_one", function() {
+      var tuple;
+      before(function() {
+        tuple = User.find("dan");
       });
 
+      it("defines a method with the given name that returns the first tuple from the relation defined in the given function", function() {
+        expect(tuple.pet()).to(equal, tuple.pets()[0]);
+      });
+
+      it("assigns the relation defined in the given function to the #{relation_name}_relation field on the tuple", function() {
+        expect(tuple.pet_relation.tuples()[0]).to(equal, tuple.pet());
+      });
     });
 
     describe("#find", function() {
