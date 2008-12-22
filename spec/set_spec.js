@@ -20,7 +20,6 @@ Screw.Unit(function() {
 
         it("creates an accessor method for each declared attribute on the Set's generated Tuple constructor", function() {
           tuple.first_name("Jan");
-          console.debug(tuple.fields);
           expect(tuple.first_name()).to(equal, "Jan");
         });
       });
@@ -31,6 +30,38 @@ Screw.Unit(function() {
           expect(tuple.bar).to(equal, User.Tuple.prototype.bar);
         });
       });
+
+      describe(".relates_to_many", function() {
+        var tuple, expected_tuples;
+        before(function() {
+          tuple = User.find("dan");
+          expected_tuples = Pet.where(Pet.owner_id.eq(tuple.id())).tuples();
+        });
+
+        it("creates a method with the given name that returns the #tuples of the relation defined by the given function", function() {
+          expect(tuple.pets()).to(equal, expected_tuples);
+        });
+        
+        it("defines an #each function on the relation method which iterates over the tuples in the relation", function() {
+          var eached_tuples = [];
+          tuple.pets.each(function() {
+            eached_tuples.push(this);
+          })
+          expect(eached_tuples).to(equal, expected_tuples);
+        });
+
+        it("defines a #map function on the relation method which maps over the tuples in the relation", function() {
+          var expected_results = [];
+          tuple.pets.each(function() {
+            expected_results.push(this.name());
+          });
+          var results = tuple.pets.map(function() {
+            return this.name();
+          });
+          expect(results).to(equal, expected_results);
+        });
+      });
+
     });
 
     describe("#find", function() {
@@ -43,7 +74,7 @@ Screw.Unit(function() {
 
       describe("when passed an id that does not belong to a tuple in the Set", function() {
         it("returns null", function() {
-
+  
         });
       });
     });

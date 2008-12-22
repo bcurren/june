@@ -24,6 +24,10 @@ Screw.Unit(function() {
           'age': 'integer'
         });
 
+        relates_to_many("pets", function() {
+          return Pet.where(Pet.owner_id.eq(this.id()));
+        });
+
         methods({
           foo: function() {
             return "foo";

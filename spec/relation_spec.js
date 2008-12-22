@@ -34,5 +34,13 @@ Screw.Unit(function() {
       });
     });
     
+    describe("#each", function() {
+      it("invokes the given function on each tuple in the relation", function() {
+        var each_tuple = [];
+        var results = User.each(function() { each_tuple.push(this) });
+        expect(each_tuple).to(equal, User.tuples());
+      });
+    });
+
   });
 });
