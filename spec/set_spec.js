@@ -110,6 +110,32 @@ Screw.Unit(function() {
           });
         });
       });
+
+      describe(".belongs_to", function() {
+        var person_tuple, pet_tuple, species_tuple;
+
+        before(function() {
+          pet_tuple = Pet.find("fido");
+        });
+
+        describe("when not given options", function() {
+          it("sets up a one-relation with an inferred target Set and foreign key", function() {
+            expect(pet_tuple.species()).to(equal, Species.find(pet_tuple.species_id()));
+          });
+        });
+
+        describe("when given only a target_set_name", function() {
+          it("sets up a one-relation with the requested target Set and a foreign key inferred from the relation name", function() {
+            expect(pet_tuple.owner()).to(equal, User.find(pet_tuple.owner_id()));
+          });
+        });
+
+        describe("when given a target_set_name and a foreign_key_name", function() {
+          it("sets up a one-relation with the requested target Set and foreign key", function() {
+            expect(pet_tuple.owner_2()).to(equal, User.find(pet_tuple.owner_id()));
+          });
+        });
+      });
     });
 
 

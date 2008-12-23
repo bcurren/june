@@ -59,6 +59,10 @@ Screw.Unit(function() {
           'owner_id': 'string',
           'species_id': 'string'
         });
+
+        belongs_to("species");
+        belongs_to("owner", {target_set_name: "User"});
+        belongs_to("owner_2", {target_set_name: "User", foreign_key_name: "owner_id"});
       }
     });
 
