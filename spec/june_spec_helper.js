@@ -1,4 +1,5 @@
 require("/vendor/jquery-1.2.6.js");
+require("string");
 require("relation_methods");
 require("tuple_methods");
 require("set");
@@ -18,6 +19,8 @@ Screw.Unit(function() {
   before(function() {
     User = new Set(function(configuration) {
       with(configuration) {
+        global_name("User");
+
         attributes({
           'id': 'string',
           'first_name': 'string',
@@ -27,6 +30,8 @@ Screw.Unit(function() {
         relates_to_many("pets", function() {
           return Pet.where(Pet.owner_id.eq(this.id()));
         });
+
+        has_many("pets_2", {target_set_name: "Pet", foreign_key_name: "owner_id"});
 
         relates_to_one("pet", function() {
           return this.pets_relation;
@@ -46,6 +51,8 @@ Screw.Unit(function() {
 
     Pet = new Set(function(configuration) {
       with(configuration) {
+        global_name("Pet");
+
         attributes({
           'id': 'string',
           'name': 'string',
@@ -57,10 +64,14 @@ Screw.Unit(function() {
 
     Species = new Set(function(configuration) {
       with(configuration) {
+        global_name("Species");
+
         attributes({
           'id': 'string',
-          'name': 'string',
+          'name': 'string'
         });
+
+        has_many("pets");
       }
     });
 
@@ -83,7 +94,7 @@ Screw.Unit(function() {
   after(function() {
     User = undefined;
     Pet = undefined;
-    Species00 = undefined;
+    Species = undefined;
   });
 });
 
