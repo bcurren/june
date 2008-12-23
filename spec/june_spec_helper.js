@@ -32,6 +32,7 @@ Screw.Unit(function() {
         });
 
         has_many("pets_2", {target_set_name: "Pet", foreign_key_name: "owner_id"});
+        has_one("pet_2", {target_set_name: "Pet", foreign_key_name: "owner_id"});
 
         relates_to_one("pet", function() {
           return this.pets_relation;
@@ -76,6 +77,7 @@ Screw.Unit(function() {
         });
 
         has_many("pets");
+        has_one("pet");
       }
     });
 

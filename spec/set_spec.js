@@ -111,6 +111,30 @@ Screw.Unit(function() {
         });
       });
 
+      describe(".has_one", function() {
+        var person_tuple, species_tuple;
+        before(function() {
+          person_tuple = User.find("dan");
+          species_tuple = Species.find("dog");
+        });
+
+        describe("when not given options", function() {
+          it("sets up a many-relation with an inferred target Set and foreign key", function() {
+            var expected_tuple = Pet.where(Pet.species_id.eq(species_tuple.id())).tuples()[0];
+            expect(expected_tuple).to_not(be_null);
+            expect(species_tuple.pet()).to(equal, expected_tuple);
+          });
+        });
+
+        describe("when given a target_set_name and a foreign_key_name", function() {
+          it("sets up a many-relation with the requested target Set and foreign key", function() {
+            var expected_tuple = Pet.where(Pet.owner_id.eq(person_tuple.id())).tuples()[0];
+            expect(expected_tuple).to_not(be_null);
+            expect(person_tuple.pet_2()).to(equal, expected_tuple);
+          });
+        });
+      });
+
       describe(".belongs_to", function() {
         var person_tuple, pet_tuple, species_tuple;
 
