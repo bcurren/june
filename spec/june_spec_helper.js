@@ -24,7 +24,8 @@ Screw.Unit(function() {
         attributes({
           'id': 'string',
           'first_name': 'string',
-          'age': 'integer'
+          'age': 'integer',
+          'dob': 'datetime'
         });
 
         relates_to_many("pets", function() {

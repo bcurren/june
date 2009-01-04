@@ -20,7 +20,7 @@ Screw.Unit(function() {
         it("raises an exception", function() {
           var exception;
           try {
-            tuple.get_field_value("first_name");
+            tuple.get_field_value(Pet.owner_id);
           } catch(e) {
             exception = e;
           }
