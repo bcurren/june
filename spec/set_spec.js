@@ -173,7 +173,7 @@ Screw.Unit(function() {
 
       describe("when passed an id that does not belong to a tuple in the Set", function() {
         it("returns null", function() {
-  
+          expect(User.find("aoeu")).to(equal, null);
         });
       });
     });
@@ -202,6 +202,65 @@ Screw.Unit(function() {
 
       it("adds the created object to #tuples", function() {
         expect(User.tuples().indexOf(tuple)).to_not(equal, -1);
+      });
+    });
+
+    describe("#insert", function() {
+      it("adds the created object to #tuples", function() {
+        var tuple = new User.Tuple({
+          age: 25,
+          first_name: "Ryan"
+        });
+        expect(User.tuples().indexOf(tuple)).to(equal, -1);
+        User.insert(tuple);
+        expect(User.tuples().indexOf(tuple)).to_not(equal, -1);
+      });
+    });
+
+    describe("#remove", function() {
+      describe("when given a tuple in #tuples", function() {
+        it("removes the given object from #tuples", function() {
+          var tuple = User.find("bob")
+          expect(tuple).to_not(be_null);
+          User.remove(tuple);
+          expect(User.find("bob")).to(be_null);
+        });
+      });
+
+      describe("when given an object not in #tuples", function() {
+        it("returns null", function() {
+          expect(User.remove("nothing")).to(equal, null);
+        });
+      });
+    });
+
+    describe("event handling", function() {
+      describe("when a tuple in the Set is created", function() {
+        it("causes #on_insert handlers to be invoked with the inserted tuple", function() {
+          var on_insert_args = [];
+          User.on_insert(function() {
+            on_insert_args.push(arguments);
+          });
+          
+          User.create({id: "emma", first_name: "Emma"});
+
+          expect(on_insert_args.length).to(equal, 1);
+          expect(on_insert_args[0][0].id()).to(equal, "emma");
+          expect(on_insert_args[0][0].first_name()).to(equal, "Emma");
+        });
+      });
+
+      describe("when a tuple in the Set is removed", function() {
+        it("causes #on_remove handlers to be invoked with the deleted tuple", function() {
+          var on_remove_args = [];
+          User.on_remove(function() {
+            on_remove_args.push(arguments);
+          });
+
+          var tuple = User.find("bob");
+          User.remove(tuple);
+          expect(on_remove_args).to(equal, [[tuple]]);
+        });
       });
     });
   });
