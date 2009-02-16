@@ -1,6 +1,6 @@
 require("/specs/june_spec_helper");
 
-Screw.Unit(function() {
+Screw.Unit(function(c) { with(c) {
   describe("Selection", function() {
     var selection, operand, predicate;
 
@@ -27,4 +27,4 @@ Screw.Unit(function() {
       });
     });
   });
-});
+}});

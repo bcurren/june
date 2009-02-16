@@ -1,6 +1,6 @@
 require("/specs/june_spec_helper");
 
-Screw.Unit(function() {
+Screw.Unit(function(c) { with(c) {
   describe("Predicates.EqualTo", function() {
     var predicate;
 
@@ -68,4 +68,4 @@ Screw.Unit(function() {
       });
     });
   });
-});
+}});

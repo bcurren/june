@@ -1,6 +1,6 @@
 require("/specs/june_spec_helper");
 
-Screw.Unit(function() {
+Screw.Unit(function(c) { with(c) {
   describe("InnerJoin", function() {
     var join, left_operand, right_operand, predicate;
 
@@ -21,4 +21,4 @@ Screw.Unit(function() {
       });
     });
   });
-});
+}});

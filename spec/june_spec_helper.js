@@ -1,21 +1,21 @@
-require("/vendor/jquery-1.2.6.js");
-require("string");
-require("relation_methods");
-require("tuple_methods");
-require("set");
-require("inner_join");
-require("selection");
-require("composite_tuple");
-require("set_configuration");
-require("attribute");
-require("field");
-require("set_projection");
-require("predicates");
-require("predicates/predicate_methods");
-require("predicates/equal_to");
-require("predicates/not_equal_to");
+//require("/vendor/jquery-1.2.6");
+require("/june/string");
+require("/june/relation_methods");
+require("/june/tuple_methods");
+require("/june/set");
+require("/june/inner_join");
+require("/june/selection");
+require("/june/composite_tuple");
+require("/june/set_configuration");
+require("/june/attribute");
+require("/june/field");
+require("/june/set_projection");
+require("/june/predicates");
+require("/june/predicates/predicate_methods");
+require("/june/predicates/equal_to");
+require("/june/predicates/not_equal_to");
 
-Screw.Unit(function() {
+Screw.Unit(function(c) { with(c) {
   before(function() {
     User = new Set(function(configuration) {
       with(configuration) {
@@ -103,6 +103,6 @@ Screw.Unit(function() {
     Pet = undefined;
     Species = undefined;
   });
-});
+}});
 
 

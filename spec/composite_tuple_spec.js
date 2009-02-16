@@ -1,6 +1,6 @@
 require("/specs/june_spec_helper");
 
-Screw.Unit(function() {
+Screw.Unit(function(c) { with(c) {
   describe("CompositeTuple", function() {
     var composite_tuple, left, right;
 
@@ -67,4 +67,4 @@ Screw.Unit(function() {
       });
     });
   });
-});
+}});

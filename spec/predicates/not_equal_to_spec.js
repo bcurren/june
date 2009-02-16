@@ -1,4 +1,4 @@
-Screw.Unit(function() {
+Screw.Unit(function(c) { with(c) {
   describe("Predicates.NotEqualTo", function() {
     var predicate;
 
@@ -48,4 +48,4 @@ Screw.Unit(function() {
       });
     });
   });
-});
+}});

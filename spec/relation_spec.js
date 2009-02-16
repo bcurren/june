@@ -1,6 +1,6 @@
 require("/specs/june_spec_helper");
 
-Screw.Unit(function() {
+Screw.Unit(function(c) { with(c) {
   describe("All relations", function() {
     describe("#join(:left).on(:right)", function() {
       it("builds an InnerJoin ", function() {
@@ -43,4 +43,4 @@ Screw.Unit(function() {
     });
 
   });
-});
+}});

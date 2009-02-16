@@ -1,6 +1,6 @@
 require("/specs/june_spec_helper");
 
-Screw.Unit(function() {
+Screw.Unit(function(c) { with(c) {
   describe("The generated Set.Tuple constructor associated with each Set", function() {
 
     var tuple;
@@ -64,4 +64,4 @@ Screw.Unit(function() {
       });
     });
   });
-});
+}});

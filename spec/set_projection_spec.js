@@ -1,6 +1,6 @@
 require("/specs/june_spec_helper");
 
-Screw.Unit(function() {
+Screw.Unit(function(c) { with(c) {
   describe("SetProjection", function() {
     var projection, operand, projected_set;
 
@@ -23,4 +23,4 @@ Screw.Unit(function() {
       });
     });
   });
-});
+}});

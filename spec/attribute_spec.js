@@ -1,6 +1,6 @@
 require("/specs/june_spec_helper");
 
-Screw.Unit(function() {
+Screw.Unit(function(c) { with(c) { 
   describe("Attribute", function() {
 
     describe("#convert", function() {
@@ -94,4 +94,4 @@ Screw.Unit(function() {
       });
     });
   });
-});
+}});
