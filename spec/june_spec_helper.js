@@ -1,6 +1,7 @@
 //require("/vendor/jquery-1.2.6");
 require("/vendor/foundation");
 require("/june/string");
+require("/june/subscription_node");
 require("/june/relation_methods");
 require("/june/tuple_methods");
 require("/june/set");
