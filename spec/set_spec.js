@@ -259,7 +259,7 @@ Screw.Unit(function(c) { with(c) {
 
           var tuple = User.find("bob");
           User.remove(tuple);
-          expect(on_remove_args).to(equal, [[tuple]]);
+          expect(on_remove_args[0][0]).to(equal, tuple);
         });
       });
     });
