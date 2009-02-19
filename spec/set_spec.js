@@ -18,7 +18,7 @@ Screw.Unit(function(c) { with(c) {
         it("creates an Attribute object with the given name and type with on the Set for each declared Attribute", function() {
           first_name_attribute = User.first_name
           expect(first_name_attribute).to(equal, User.attributes.first_name);
-          expect(first_name_attribute.constructor).to(equal, Attribute);
+          expect(first_name_attribute.constructor).to(equal, June.Attribute);
           expect(first_name_attribute.name).to(equal, 'first_name');
           expect(first_name_attribute.type).to(equal, 'string');
           expect(first_name_attribute.set).to(equal, User);
@@ -235,7 +235,7 @@ Screw.Unit(function(c) { with(c) {
     });
 
     describe("event handling", function() {
-      describe("when a tuple in the Set is created", function() {
+      describe("when a tuple is inserted into the Set", function() {
         it("causes #on_insert handlers to be invoked with the inserted tuple", function() {
           var on_insert_args = [];
           User.on_insert(function() {

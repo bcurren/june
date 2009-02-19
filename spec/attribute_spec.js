@@ -79,7 +79,7 @@ Screw.Unit(function(c) { with(c) {
     describe("#eq", function() {
       it("returns an EqualTo predicate", function() {
         var predicate = User.id.eq("nathan");
-        expect(predicate.constructor).to(equal, Predicates.EqualTo);
+        expect(predicate.constructor).to(equal, June.Predicates.EqualTo);
         expect(predicate.operand_1).to(equal, User.id);
         expect(predicate.operand_2).to(equal, "nathan");
       });
@@ -88,7 +88,7 @@ Screw.Unit(function(c) { with(c) {
     describe("#neq", function() {
       it("returns a NotEqualTo predicate", function() {
         var predicate = User.id.neq("nathan");
-        expect(predicate.constructor).to(equal, Predicates.NotEqualTo);
+        expect(predicate.constructor).to(equal, June.Predicates.NotEqualTo);
         expect(predicate.operand_1).to(equal, User.id);
         expect(predicate.operand_2).to(equal, "nathan");
       });

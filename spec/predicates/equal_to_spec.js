@@ -8,7 +8,7 @@ Screw.Unit(function(c) { with(c) {
       describe("when #operand_1 is an Attribute and #operand_2 is a constant", function() {
         describe("when passed a Tuple with a field value for the Attribute that =='s the constant", function() {
           before(function() {
-            predicate = new Predicates.EqualTo(User.first_name, "Nathan");
+            predicate = new June.Predicates.EqualTo(User.first_name, "Nathan");
           });
 
           it("returns true", function() {
@@ -18,7 +18,7 @@ Screw.Unit(function(c) { with(c) {
 
         describe("when passed a Tuple with a field value for the Attribute that !='s the constant", function() {
           before(function() {
-            predicate = new Predicates.EqualTo(User.first_name, "Nate");
+            predicate = new June.Predicates.EqualTo(User.first_name, "Nate");
           });
 
           it("returns false", function() {
@@ -30,7 +30,7 @@ Screw.Unit(function(c) { with(c) {
       describe("when #operand_1 is a constant and #operand_2 is an Attribute", function() {
         describe("when passed a Tuple with a field value for the Attribute that =='s the constant", function() {
           before(function() {
-            predicate = new Predicates.EqualTo("Nathan", User.first_name);
+            predicate = new June.Predicates.EqualTo("Nathan", User.first_name);
           });
 
           it("returns true", function() {
@@ -40,7 +40,7 @@ Screw.Unit(function(c) { with(c) {
 
         describe("when passed a Tuple with a field value for the Attribute that !='s the constant", function() {
           before(function() {
-            predicate = new Predicates.EqualTo("Nate", User.first_name);
+            predicate = new June.Predicates.EqualTo("Nate", User.first_name);
           });
 
           it("returns false", function() {
@@ -51,7 +51,7 @@ Screw.Unit(function(c) { with(c) {
 
       describe("when #operand_1 is null and #operand_2 is an Attribute", function() {
         before(function() {
-          predicate = new Predicates.EqualTo(null, User.first_name);
+          predicate = new June.Predicates.EqualTo(null, User.first_name);
         });
 
         describe("when passed a Tuple with a field value for the Attribute that is null", function() {

@@ -1,4 +1,5 @@
 //require("/vendor/jquery-1.2.6");
+require("/vendor/foundation");
 require("/june/string");
 require("/june/relation_methods");
 require("/june/tuple_methods");
@@ -10,14 +11,13 @@ require("/june/set_configuration");
 require("/june/attribute");
 require("/june/field");
 require("/june/set_projection");
-require("/june/predicates");
 require("/june/predicates/predicate_methods");
 require("/june/predicates/equal_to");
 require("/june/predicates/not_equal_to");
 
 Screw.Unit(function(c) { with(c) {
   before(function() {
-    User = new Set(function(configuration) {
+    User = new June.Set(function(configuration) {
       with(configuration) {
         global_name("User");
 
@@ -51,7 +51,7 @@ Screw.Unit(function(c) { with(c) {
       }
     });
 
-    Pet = new Set(function(configuration) {
+    Pet = new June.Set(function(configuration) {
       with(configuration) {
         global_name("Pet");
 
@@ -68,7 +68,7 @@ Screw.Unit(function(c) { with(c) {
       }
     });
 
-    Species = new Set(function(configuration) {
+    Species = new June.Set(function(configuration) {
       with(configuration) {
         global_name("Species");
 

@@ -7,8 +7,8 @@ Screw.Unit(function(c) { with(c) {
     before(function() {
       left_operand = User;
       right_operand = Pet;
-      predicate = new Predicates.EqualTo(User.id, Pet.owner_id);
-      join = new InnerJoin(left_operand, right_operand, predicate);
+      predicate = new June.Predicates.EqualTo(User.id, Pet.owner_id);
+      join = new June.InnerJoin(left_operand, right_operand, predicate);
     });
 
     describe("#tuples", function() {

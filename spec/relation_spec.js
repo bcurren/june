@@ -16,7 +16,7 @@ Screw.Unit(function(c) { with(c) {
       it("builds a Selection", function() {
         var predicate = User.id.eq("bob");
         var selection = User.where(predicate)
-        expect(selection.constructor).to(equal, Selection);
+        expect(selection.constructor).to(equal, June.Selection);
         expect(selection.operand).to(equal, User);
         expect(selection.predicate).to(equal, predicate);
       });

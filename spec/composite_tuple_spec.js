@@ -7,7 +7,7 @@ Screw.Unit(function(c) { with(c) {
     before(function() {
       left = User.find("dan");
       right = Pet.find("fido");
-      composite_tuple = new CompositeTuple(left, right);
+      composite_tuple = new June.CompositeTuple(left, right);
     });
 
     describe("#get_field_value", function() {
@@ -31,9 +31,9 @@ Screw.Unit(function(c) { with(c) {
       var flat_compound_tuple, deep_compound_tuple_left, deep_compound_tuple_right;
       
       before(function() {
-        flat_composite_tuple = new CompositeTuple(User.find("bob"), Pet.find("blue"));
-        deep_composite_tuple_left = new CompositeTuple(new CompositeTuple(User.find("bob"), Pet.find("blue")), Species.find("dog"));
-        deep_composite_tuple_right = new CompositeTuple(User.find("bob"), new CompositeTuple(Pet.find("blue"), Species.find("dog")));
+        flat_composite_tuple = new June.CompositeTuple(User.find("bob"), Pet.find("blue"));
+        deep_composite_tuple_left = new June.CompositeTuple(new June.CompositeTuple(User.find("bob"), Pet.find("blue")), Species.find("dog"));
+        deep_composite_tuple_right = new June.CompositeTuple(User.find("bob"), new June.CompositeTuple(Pet.find("blue"), Species.find("dog")));
       });
       
       describe("when the #left tuple is a member of the given Set", function() {
