@@ -19,7 +19,6 @@ Screw.Unit(function(c) { with(c) {
         expect(fn_1).to(have_been_called, with_args("foo"));
         expect(fn_2).to(have_been_called, with_args("foo"));
 
-
         node.publish("bar", "baz");
         expect(fn_1).to(have_been_called, with_args("bar", "baz"));
         expect(fn_2).to(have_been_called, with_args("bar", "baz"));
