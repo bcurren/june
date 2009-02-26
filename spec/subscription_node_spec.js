@@ -9,19 +9,20 @@ Screw.Unit(function(c) { with(c) {
 
     describe("#publish", function() {
       it("invokes functions registered with #subscribe", function() {
-        var subscription_1_args = []
+        var fn_1 = mock_function();
+        var fn_2 = mock_function();
 
-        node.subscribe(function() {
-          subscription_1_args.push(new Array(arguments))
-        });
-
-
+        node.subscribe(fn_1);
         node.subscribe(fn_2);
-        
-        node.publish("foo", "bar");
 
-        expect(fn_1).to(have_been_called);
-        expect(fn_2).to(have_been_called);
+        node.publish("foo");
+        expect(fn_1).to(have_been_called, with_args("foo"));
+        expect(fn_2).to(have_been_called, with_args("foo"));
+
+
+        node.publish("bar", "baz");
+        expect(fn_1).to(have_been_called, with_args("bar", "baz"));
+        expect(fn_2).to(have_been_called, with_args("bar", "baz"));
       });
     });
   });
