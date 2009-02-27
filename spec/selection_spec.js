@@ -31,6 +31,7 @@ Screw.Unit(function(c) { with(c) {
       var insert_handler;
       before(function() {
         insert_handler = mock_function();
+        insert_handler.function_name = "insert handler";
         selection.on_insert(insert_handler);
       });
 
@@ -55,7 +56,39 @@ Screw.Unit(function(c) { with(c) {
       });
 
       context("when a tuple in the Selection's #operand is updated", function() {
+        var tuple;
 
+        context("when that tuple matched #predicate before the update", function() {
+          context("when that tuple matches #predicate after the update", function() {
+            it("does not cause #on_insert handlers to be invoked with the updated tuple", function() {
+            });
+          });
+
+          context("when that tuple does not match #predicate after the update", function() {
+
+          });
+        });
+
+        context("when that tuple did not match #predicate before the update", function() {
+          before(function() {
+            tuple = operand.find("alice");
+            expect(predicate.evaluate(tuple)).to(be_false);
+          });
+
+          context("when that tuple matches #predicate after the update", function() {
+            it("causes #on_insert handlers to be invoked with the updated tuple", function() {
+              tuple.age(21);
+              expect(predicate.evaluate(tuple)).to(be_true);
+              
+//              expect(insert_handler).to(have_been_called);
+            });
+          });
+
+          context("when that tuple does not match #predicate after the update", function() {
+            it("does not cause #on_insert handlers to be invoked with the updated tuple", function() {
+            });
+          });
+        });
       });
     });
   });
