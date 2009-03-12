@@ -59,6 +59,11 @@ Screw.Unit(function(c) { with(c) {
         var tuple;
 
         context("when that tuple matched #predicate before the update", function() {
+          before(function() {
+            tuple = operand.find("dan");
+            expect(predicate.evaluate(tuple)).to(be_true);
+          });
+
           context("when that tuple matches #predicate after the update", function() {
             it("does not cause #on_insert handlers to be invoked with the updated tuple", function() {
             });
