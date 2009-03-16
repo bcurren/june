@@ -1,3 +1,9 @@
+subscription destruction and transitive unsubscribe
+
+Selection#on_delete
+Selection#on_update
+
+
 domain snapshot merging
 event propagation through relations
 domain object / global domain
