@@ -115,15 +115,36 @@ Screw.Unit(function(c) { with(c) {
       describe("#on_insert", function() {
         context("when no event handlers have yet been registered", function() {
           before(function() {
-            expect(selection.on_insert_node.is_empty()).to(be_true)
+            expect(selection.on_insert_node.is_empty()).to(be_true);
+          });
+
+          it("subscribes to its #operand", function() {
+            mock(operand, 'on_insert');
+            mock(operand, 'on_update');
+
+            selection.on_insert(function() {});
+
+            expect(operand.on_insert).to(have_been_called);
+            expect(operand.on_update).to(have_been_called);
           });
         });
 
         context("when called a subsequent time", function() {
+          before(function() {
+            selection.on_insert(function() {});
+          });
 
+          it("does not subscribe to its #operand", function() {
+            mock(operand, 'on_insert');
+            mock(operand, 'on_update');
+
+            selection.on_insert(function() {});
+
+            expect(operand.on_insert).to_not(have_been_called);
+            expect(operand.on_update).to_not(have_been_called);
+          });
         });
       });
     });
-
   });
 }});
