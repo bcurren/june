@@ -30,10 +30,33 @@ Screw.Unit(function(c) { with(c) {
     });
 
     describe("#set_field_value", function() {
+      before(function() {
+        mock(tuple.set, 'tuple_updated');
+      });
+
       describe("when called with an Attribute that is defined on the Set", function() {
         it("stores the value in the corresponding Field", function() {
           tuple.set_field_value(tuple.set.first_name, "Wil");
           expect(tuple.get_field_value(tuple.set.first_name)).to(equal, "Wil");
+        });
+
+
+        context("when the new value is different than the old value", function() {
+          it("calls #tuple_updated on the tuple's #set with the updated tuple", function() {
+            var old_value = tuple.age();
+            var new_value = old_value + 1;
+
+            tuple.set_field_value(tuple.set.age, new_value);
+            expect(tuple.set.tuple_updated).to(have_been_called, with_args(tuple));
+          });
+        });
+
+        context("when the new value is the same as the old value", function() {
+          it("calls #tuple_updated on the tuple's #set", function() {
+            tuple.set_field_value(tuple.set.age, tuple.age());
+            expect(tuple.set.tuple_updated).to_not(have_been_called, with_args(tuple));
+          });
+          
         });
       });
 

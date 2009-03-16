@@ -262,6 +262,24 @@ Screw.Unit(function(c) { with(c) {
           expect(on_remove_args[0][0]).to(equal, tuple);
         });
       });
+
+      describe("when a tuple in the Set is updated", function() {
+        it("causes #on_update handlers to be invoked with the updated tuple", function() {
+          var on_remove_args = [];
+
+          var update_handler = mock_function();
+          update_handler.function_name = "tuple update handler";
+          User.on_update(update_handler);
+
+          var tuple = User.find("bob");
+
+          var old_value = tuple.age();
+          var new_value = old_value + 1;
+          
+          tuple.age(new_value);
+          expect(update_handler).to(have_been_called, with_args(tuple));
+        });
+      });
     });
   });
 }});

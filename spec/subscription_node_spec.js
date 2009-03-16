@@ -24,5 +24,21 @@ Screw.Unit(function(c) { with(c) {
         expect(fn_2).to(have_been_called, with_args("bar", "baz"));
       });
     });
+
+    describe("#is_empty", function() {
+      context("when a subscription has been registered", function() {
+        it("returns false", function() {
+          node.subscribe(function() {});
+          expect(node.is_empty()).to(be_false);
+        });
+      });
+
+      context("when no subscriptions have been registered", function() {
+        it("returns true", function() {
+          expect(node.subscriptions).to(be_empty);
+          expect(node.is_empty()).to(be_true);
+        });
+      });
+    });
   });
 }});

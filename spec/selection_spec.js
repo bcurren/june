@@ -28,11 +28,15 @@ Screw.Unit(function(c) { with(c) {
     });
 
     describe("event handling", function() {
-      var insert_handler;
+      var insert_handler, remove_handler;
       before(function() {
         insert_handler = mock_function();
         insert_handler.function_name = "insert handler";
         selection.on_insert(insert_handler);
+
+        remove_handler = mock_function();
+        remove_handler.function_name = "remove handler";
+        selection.on_insert(remove_handler);
       });
 
       context("when a tuple is inserted in the Selection's #operand", function() {
@@ -55,46 +59,71 @@ Screw.Unit(function(c) { with(c) {
         });
       });
 
-      context("when a tuple in the Selection's #operand is updated", function() {
-        var tuple;
+//      context("when a tuple in the Selection's #operand is updated", function() {
+//        var tuple;
+//
+//        context("when that tuple matched #predicate before the update", function() {
+//          before(function() {
+//            tuple = operand.find("dan");
+//            expect(predicate.evaluate(tuple)).to(be_true);
+//          });
+//
+//          context("when that tuple matches #predicate after the update", function() {
+//            it("does not cause #on_insert handlers to be invoked with the updated tuple", function() {
+//              tuple.first_name("Danny");
+//              expect(predicate.evaluate(tuple)).to(be_true);
+//              expect(insert_handler).to_not(have_been_called);
+//            });
+//          });
+//
+//          context("when that tuple does not match #predicate after the update", function() {
+//            it("does not cause #on_insert handlers to be invoked with the updated tuple", function() {
+//              tuple.first_name("Danny");
+//              expect(predicate.evaluate(tuple)).to(be_false);
+//              expect(insert_handler).to_not(have_been_called);
+//            });
+//          });
+//        });
+//
+//        context("when that tuple did not match #predicate before the update", function() {
+//          before(function() {
+//            tuple = operand.find("alice");
+//            expect(predicate.evaluate(tuple)).to(be_false);
+//          });
+//
+//          context("when that tuple matches #predicate after the update", function() {
+//            it("causes #on_insert handlers to be invoked with the updated tuple", function() {
+//              tuple.age(21);
+//              expect(predicate.evaluate(tuple)).to(be_true);
+//              expect(insert_handler).to(have_been_called);
+//            });
+//          });
+//
+//          context("when that tuple does not match #predicate after the update", function() {
+//            it("does not cause #on_insert handlers to be invoked with the updated tuple", function() {
+//              tuple.first_name("Danny");
+//              expect(predicate.evaluate(tuple)).to(be_false);
+//              expect(insert_handler).to_not(have_been_called);
+//            });
+//          });
+//        });
+//      });
+    });
 
-        context("when that tuple matched #predicate before the update", function() {
+
+    describe("subscription propagation", function() {
+      describe("#on_insert", function() {
+        context("when no event handlers have yet been registered", function() {
           before(function() {
-            tuple = operand.find("dan");
-            expect(predicate.evaluate(tuple)).to(be_true);
-          });
-
-          context("when that tuple matches #predicate after the update", function() {
-            it("does not cause #on_insert handlers to be invoked with the updated tuple", function() {
-            });
-          });
-
-          context("when that tuple does not match #predicate after the update", function() {
-
+            expect(selection.on_insert_node.is_empty()).to(be_true)
           });
         });
 
-        context("when that tuple did not match #predicate before the update", function() {
-          before(function() {
-            tuple = operand.find("alice");
-            expect(predicate.evaluate(tuple)).to(be_false);
-          });
+        context("when called a subsequent time", function() {
 
-          context("when that tuple matches #predicate after the update", function() {
-            it("causes #on_insert handlers to be invoked with the updated tuple", function() {
-              tuple.age(21);
-              expect(predicate.evaluate(tuple)).to(be_true);
-              
-//              expect(insert_handler).to(have_been_called);
-            });
-          });
-
-          context("when that tuple does not match #predicate after the update", function() {
-            it("does not cause #on_insert handlers to be invoked with the updated tuple", function() {
-            });
-          });
         });
       });
     });
+
   });
 }});
