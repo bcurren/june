@@ -179,8 +179,12 @@ Screw.Unit(function(c) { with(c) {
     });
 
     describe("#create", function() {
-      var tuple;
+      var tuple, update_handler;
       before(function() {
+        update_handler = mock_function();
+        update_handler.function_name = "update handler";
+        User.on_update(update_handler);
+
         tuple = User.create({
           age: 25,
           first_name: "Ryan"
@@ -202,6 +206,10 @@ Screw.Unit(function(c) { with(c) {
 
       it("adds the created object to #tuples", function() {
         expect(User.tuples().indexOf(tuple)).to_not(equal, -1);
+      });
+
+      it("does not trigger #on_update handlers while initializing the fields of the created tuple", function() {
+        expect(update_handler).to_not(have_been_called);
       });
     });
 

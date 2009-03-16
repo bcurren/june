@@ -47,6 +47,15 @@ Screw.Unit(function(c) { with(c) {
             
             expect(insert_handler).to(have_been_called, with_args(tuple));
           });
+
+          it("#contains the inserted tuple before #on_insert handlers are triggered", function() {
+            selection.on_insert(function(tuple) {
+              expect(selection.contains(tuple)).to(be_true);
+            });
+
+            expect(selection.contains(tuple)).to(be_false);
+            tuple = operand.create({id: "mike", age: 21});
+          });
         });
 
         context("when that tuple does not match #predicate", function() {
@@ -74,6 +83,16 @@ Screw.Unit(function(c) { with(c) {
               expect(predicate.evaluate(tuple)).to(be_true);
               expect(insert_handler).to_not(have_been_called);
             });
+
+            // TODO: Cover no triggering of on_remove
+            // TODO: Cover triggering of on_update
+
+            it("continues to #contain the tuple", function() {
+              expect(selection.contains(tuple)).to(be_true);
+              tuple.first_name("Danny");
+              expect(selection.contains(tuple)).to(be_true);
+            });
+
           });
 
           context("when that tuple does not match #predicate after the update", function() {
@@ -82,6 +101,9 @@ Screw.Unit(function(c) { with(c) {
               expect(predicate.evaluate(tuple)).to(be_false);
               expect(insert_handler).to_not(have_been_called, with_args(tuple));
             });
+
+            // TODO: Cover triggering of on_remove
+            // TODO: Cover !contains
           });
         });
 
@@ -97,6 +119,15 @@ Screw.Unit(function(c) { with(c) {
               expect(predicate.evaluate(tuple)).to(be_true);
               expect(insert_handler).to(have_been_called);
             });
+
+            it("#contains the tuple before #on_insert handlers are fired", function() {
+              selection.on_insert(function(tuple) {
+                expect(selection.contains(tuple)).to(be_true);
+              })
+
+              expect(selection.contains(tuple)).to(be_false);
+              tuple.age(21);
+            });
           });
 
           context("when that tuple does not match #predicate after the update", function() {
@@ -104,6 +135,12 @@ Screw.Unit(function(c) { with(c) {
               tuple.first_name("Danny");
               expect(predicate.evaluate(tuple)).to(be_false);
               expect(insert_handler).to_not(have_been_called);
+            });
+
+            it("continues to not #contain the tuple", function() {
+              expect(selection.contains(tuple)).to(be_false);
+              tuple.first_name("Danny");
+              expect(selection.contains(tuple)).to(be_false);
             });
           });
         });
