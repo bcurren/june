@@ -241,6 +241,27 @@ Screw.Unit(function(c) { with(c) {
         });
       });
     });
+    
+    describe("#on_insert", function() {
+      it("returns a Subscription for the #on_insert_node", function() {
+        var subscription = User.on_insert(function() {});
+        expect(subscription.node).to(equal, User.on_insert_node);
+      });
+    });
+
+    describe("#on_remove", function() {
+      it("returns a Subscription for the #on_remove_node", function() {
+        var subscription = User.on_remove(function() {});
+        expect(subscription.node).to(equal, User.on_remove_node);
+      });
+    });
+
+    describe("#on_update", function() {
+      it("returns a Subscription for the #on_update_node", function() {
+        var subscription = User.on_update(function() {});
+        expect(subscription.node).to(equal, User.on_update_node);
+      });
+    });
 
     describe("event handling", function() {
       describe("when a tuple is inserted into the Set", function() {

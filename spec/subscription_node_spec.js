@@ -7,6 +7,13 @@ Screw.Unit(function(c) { with(c) {
       node = new June.SubscriptionNode();
     });
 
+    describe("#subscribe", function() {
+      it("returns a Subscription with the SubscriptionNode as its #node", function() {
+        var subscription = node.subscribe(function() {});
+        expect(subscription.node).to(equal, node);
+      });
+    });
+
     describe("#publish", function() {
       it("invokes functions registered with #subscribe", function() {
         var fn_1 = mock_function();
