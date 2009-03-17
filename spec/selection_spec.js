@@ -41,6 +41,29 @@ Screw.Unit(function(c) { with(c) {
       });
     });
 
+
+    describe("#has_subscribers", function() {
+      context("if a handler has been registered with #on_insert", function() {
+        it("returns true", function() {
+          selection.on_insert(function() {});
+          expect(selection.has_subscribers()).to(be_true);
+        });
+      });
+
+      context("if a handler has been registered with #on_remove", function() {
+        it("returns true", function() {
+          selection.on_remove(function() {});
+          expect(selection.has_subscribers()).to(be_true);
+        });
+      });
+
+      context("if no handlers have been registered", function() {
+        it("returns false", function() {
+          expect(selection.has_subscribers()).to(be_false);
+        });
+      });
+    });
+
     describe("event handling", function() {
       var insert_handler, remove_handler;
       before(function() {
@@ -201,10 +224,10 @@ Screw.Unit(function(c) { with(c) {
         describe("when an #on_insert subscription is registered", function() {
           context("when this is the first subscription", function() {
             before(function() {
-              expect(selection.on_insert_node.is_empty()).to(be_true);
+              expect(selection.has_subscribers()).to(be_false);
             });
 
-            it("subscribes #on_insert and #on_update on its #operand", function() {
+            it("subscribes #on_insert and #on_update on #operand", function() {
               mock(operand, 'on_insert');
               mock(operand, 'on_update');
 
@@ -220,7 +243,7 @@ Screw.Unit(function(c) { with(c) {
               selection.on_insert(function() {});
             });
 
-            it("does not subscribe to its #operand", function() {
+            it("does not subscribe to #operand", function() {
               mock(operand, 'on_insert');
               mock(operand, 'on_update');
 
@@ -239,12 +262,8 @@ Screw.Unit(function(c) { with(c) {
           });
 
           context("when it is the last subscription to be destroyed", function() {
-            it("destroys the #on_insert and #on_update subscriptions on its #operand", function() {
+            it("destroys the #on_insert and #on_update subscriptions on #operand", function() {
               expect(selection.operand_subscriptions).to_not(be_empty);
-
-              console.debug(selection.operand_subscriptions);
-
-
               jQuery.each(selection.operand_subscriptions, function() {
                 mock(this, 'destroy');
               });
@@ -263,7 +282,86 @@ Screw.Unit(function(c) { with(c) {
               selection.on_insert(function() {});
             });
 
-            it("does not destroy the #on_insert and #on_update subscriptions on its #operand", function() {
+            it("does not destroy the #on_insert and #on_update subscriptions on #operand", function() {
+              expect(selection.operand_subscriptions).to_not(be_empty);
+              jQuery.each(selection.operand_subscriptions, function() {
+                mock(this, 'destroy');
+              });
+
+              subscription.destroy();
+
+              jQuery.each(selection.operand_subscriptions, function() {
+                expect(this.destroy).to_not(have_been_called);
+              });
+              expect(selection.operand_subscriptions).to_not(be_empty);
+            });
+          });
+        });
+      });
+
+      describe("#on_remove subscriptions", function() {
+        describe("when an #on_remove subscription is registered", function() {
+          context("when this is the first subscription", function() {
+            before(function() {
+              expect(selection.has_subscribers()).to(be_false);
+            });
+
+            it("subscribes #on_remove and #on_update on #operand", function() {
+              mock(operand, 'on_insert');
+              mock(operand, 'on_update');
+
+              selection.on_remove(function() {});
+
+              expect(operand.on_insert).to(have_been_called);
+              expect(operand.on_update).to(have_been_called);
+            });
+          });
+
+          context("when this is not the first subscription", function() {
+            before(function() {
+              selection.on_remove(function() {});
+            });
+
+            it("does not subscribe to #operand", function() {
+              mock(operand, 'on_remove');
+              mock(operand, 'on_update');
+
+              selection.on_remove(function() {});
+
+              expect(operand.on_remove).to_not(have_been_called);
+              expect(operand.on_update).to_not(have_been_called);
+            });
+          });
+        });
+
+        describe("when an #on_remove subscription is destroyed", function() {
+          var subscription;
+          before(function() {
+            subscription = selection.on_remove(function() {});
+          });
+
+          context("when it is the last subscription to be destroyed", function() {
+            it("destroys the #on_remove and #on_update subscriptions on #operand", function() {
+              expect(selection.operand_subscriptions).to_not(be_empty);
+              jQuery.each(selection.operand_subscriptions, function() {
+                mock(this, 'destroy');
+              });
+
+              subscription.destroy();
+
+              jQuery.each(selection.operand_subscriptions, function() {
+                expect(this.destroy).to(have_been_called);
+              });
+              expect(selection.operand_subscriptions).to(be_empty);
+            });
+          });
+
+          context("when it is not the last subscription to be destroyed", function() {
+            before(function() {
+              selection.on_remove(function() {});
+            });
+
+            it("does not destroy the #on_remove and #on_update subscriptions on #operand", function() {
               expect(selection.operand_subscriptions).to_not(be_empty);
               jQuery.each(selection.operand_subscriptions, function() {
                 mock(this, 'destroy');
