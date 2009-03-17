@@ -34,6 +34,13 @@ Screw.Unit(function(c) { with(c) {
       });
     });
 
+    describe("#on_remove", function() {
+      it("returns a Subscription with #on_remove_node as its #node", function() {
+        var subscription = selection.on_remove(function() {});
+        expect(subscription.node).to(equal, selection.on_remove_node);
+      });
+    });
+
     describe("event handling", function() {
       var insert_handler, remove_handler;
       before(function() {
@@ -43,7 +50,7 @@ Screw.Unit(function(c) { with(c) {
 
         remove_handler = mock_function();
         remove_handler.function_name = "remove handler";
-        selection.on_insert(remove_handler);
+        selection.on_remove(remove_handler);
       });
 
       context("when a tuple is inserted in the Selection's #operand", function() {
@@ -91,7 +98,12 @@ Screw.Unit(function(c) { with(c) {
               expect(insert_handler).to_not(have_been_called);
             });
 
-            // TODO: Cover no triggering of on_remove
+            it("does not cause #on_remove handlers to be invoked with the updated tuple", function() {
+              tuple.first_name("Danny");
+              expect(predicate.evaluate(tuple)).to(be_true);
+              expect(remove_handler).to_not(have_been_called);
+            });
+
             // TODO: Cover triggering of on_update
 
             it("continues to #contain the tuple", function() {
@@ -99,7 +111,6 @@ Screw.Unit(function(c) { with(c) {
               tuple.first_name("Danny");
               expect(selection.contains(tuple)).to(be_true);
             });
-
           });
 
           context("when that tuple does not match #predicate after the update", function() {
@@ -109,8 +120,22 @@ Screw.Unit(function(c) { with(c) {
               expect(insert_handler).to_not(have_been_called, with_args(tuple));
             });
 
-            // TODO: Cover triggering of on_remove
-            // TODO: Cover !contains
+            it("causes #on_remove handlers to be invoked with the updated tuple", function() {
+              tuple.age(34);
+              expect(predicate.evaluate(tuple)).to(be_false);
+              expect(remove_handler).to(have_been_called);
+            });
+
+            // TODO: Cover !triggering of on_update
+
+            it("does not #contain the updated tuple before the #on_remove handlers are triggered", function() {
+              selection.on_remove(function() {
+                expect(selection.contains(tuple)).to(be_false);
+              })
+
+              expect(selection.contains(tuple)).to(be_true);
+              tuple.age(34);
+            });
           });
         });
 
@@ -126,6 +151,15 @@ Screw.Unit(function(c) { with(c) {
               expect(predicate.evaluate(tuple)).to(be_true);
               expect(insert_handler).to(have_been_called);
             });
+
+            it("does not cause #on_remove handlers to be invoked with the updated tuple", function() {
+              tuple.age(21);
+              expect(predicate.evaluate(tuple)).to(be_true);
+              expect(remove_handler).to_not(have_been_called);
+            });
+
+            // TODO: Cover !triggering of on_update
+
 
             it("#contains the tuple before #on_insert handlers are fired", function() {
               selection.on_insert(function(tuple) {
@@ -144,6 +178,14 @@ Screw.Unit(function(c) { with(c) {
               expect(insert_handler).to_not(have_been_called);
             });
 
+            it("does not cause #on_remove handlers to be invoked with the updated tuple", function() {
+              tuple.first_name("Danny");
+              expect(predicate.evaluate(tuple)).to(be_false);
+              expect(remove_handler).to_not(have_been_called);
+            });
+
+            // TODO: Cover !triggering of on_update
+
             it("continues to not #contain the tuple", function() {
               expect(selection.contains(tuple)).to(be_false);
               tuple.first_name("Danny");
@@ -153,7 +195,6 @@ Screw.Unit(function(c) { with(c) {
         });
       });
     });
-
 
     describe("subscription propagation", function() {
       describe("#on_insert subscriptions", function() {
@@ -238,9 +279,6 @@ Screw.Unit(function(c) { with(c) {
           });
         });
       });
-
-
-
     });
   });
 }});

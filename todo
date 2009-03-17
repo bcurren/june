@@ -1,6 +1,5 @@
-selection's transitive unsubscribe for insert and update handlers
-Selection#on_delete
 Selection#on_update
+Selection#on_delete
 
 selection's transitive unsubscribe for delete handlers
 
