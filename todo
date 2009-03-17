@@ -1,7 +1,9 @@
-subscription destruction and transitive unsubscribe
-
+selection's transitive unsubscribe for insert and update handlers
 Selection#on_delete
 Selection#on_update
+
+selection's transitive unsubscribe for delete handlers
+
 
 
 domain snapshot merging

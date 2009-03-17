@@ -13,6 +13,35 @@ Screw.Unit(function(c) { with(c) {
         expect(subscription.node).to(equal, node);
       });
     });
+    
+    describe("#unsubscribe", function() {
+      it("causes the given Subscription's #handler to no longer be triggered by #publish", function() {
+        var handler = mock_function();
+        handler.function_name = "subscription handler";
+
+        var subscription = node.subscribe(handler);
+
+        node.publish();
+        expect(handler).to(have_been_called, once);
+
+        node.unsubscribe(subscription);
+
+        node.publish();
+        expect(handler).to(have_been_called, once);
+      });
+
+      it("triggers handlers registered with #on_unsubscribe with the unsubscribed Subscription", function() {
+        var handler = mock_function();
+        handler.function_name = "unsubscribe handler";
+
+        node.on_unsubscribe(handler);
+
+        var subscription = node.subscribe(handler);
+        node.unsubscribe(subscription);
+
+        expect(handler).to(have_been_called, with_args(subscription));
+      });
+    });
 
     describe("#publish", function() {
       it("invokes functions registered with #subscribe", function() {
