@@ -41,6 +41,12 @@ Screw.Unit(function(c) { with(c) {
       });
     });
 
+    describe("#on_update", function() {
+      it("returns a Subscription with #on_update_node as its #node", function() {
+        var subscription = selection.on_update(function() {});
+        expect(subscription.node).to(equal, selection.on_update_node);
+      });
+    });
 
     describe("#has_subscribers", function() {
       context("if a handler has been registered with #on_insert", function() {
@@ -57,6 +63,13 @@ Screw.Unit(function(c) { with(c) {
         });
       });
 
+      context("if a handler has been registered with #on_update", function() {
+        it("returns true", function() {
+          selection.on_update(function() {});
+          expect(selection.has_subscribers()).to(be_true);
+        });
+      });
+
       context("if no handlers have been registered", function() {
         it("returns false", function() {
           expect(selection.has_subscribers()).to(be_false);
@@ -65,7 +78,7 @@ Screw.Unit(function(c) { with(c) {
     });
 
     describe("event handling", function() {
-      var insert_handler, remove_handler;
+      var insert_handler, remove_handler, update_handler;
       before(function() {
         insert_handler = mock_function();
         insert_handler.function_name = "insert handler";
@@ -74,11 +87,15 @@ Screw.Unit(function(c) { with(c) {
         remove_handler = mock_function();
         remove_handler.function_name = "remove handler";
         selection.on_remove(remove_handler);
+
+        update_handler = mock_function();
+        update_handler.function_name = "update handler";
+        selection.on_update(update_handler);
       });
 
       context("when a tuple is inserted in the Selection's #operand", function() {
         context("when that tuple matches #predicate", function() {
-          it("causes #on_insert handlers to be invoked with the inserted tuple", function() {
+          it("triggers #on_insert handlers with the inserted tuple", function() {
             tuple = operand.create({id: "mike", age: 21});
             expect(predicate.evaluate(tuple)).to(be_true);
             
@@ -96,7 +113,7 @@ Screw.Unit(function(c) { with(c) {
         });
 
         context("when that tuple does not match #predicate", function() {
-          it("does not cause #on_insert handlers to be invoked with the inserted tuple", function() {
+          it("does not trigger #on_insert handlers", function() {
             tuple = operand.create({id: "mike", age: 22});
             expect(predicate.evaluate(tuple)).to(be_false);
 
@@ -115,19 +132,23 @@ Screw.Unit(function(c) { with(c) {
           });
 
           context("when that tuple matches #predicate after the update", function() {
-            it("does not cause #on_insert handlers to be invoked with the updated tuple", function() {
+            it("does not trigger #on_insert handlers", function() {
               tuple.first_name("Danny");
               expect(predicate.evaluate(tuple)).to(be_true);
               expect(insert_handler).to_not(have_been_called);
             });
 
-            it("does not cause #on_remove handlers to be invoked with the updated tuple", function() {
+            it("does not trigger #on_remove handlers", function() {
               tuple.first_name("Danny");
               expect(predicate.evaluate(tuple)).to(be_true);
               expect(remove_handler).to_not(have_been_called);
             });
 
-            // TODO: Cover triggering of on_update
+            it("triggers #on_update handlers with the updated tuple", function() {
+              tuple.first_name("Danny");
+              expect(predicate.evaluate(tuple)).to(be_true);
+              expect(update_handler).to(have_been_called, with_args(tuple));
+            });
 
             it("continues to #contain the tuple", function() {
               expect(selection.contains(tuple)).to(be_true);
@@ -137,19 +158,23 @@ Screw.Unit(function(c) { with(c) {
           });
 
           context("when that tuple does not match #predicate after the update", function() {
-            it("does not cause #on_insert handlers to be invoked with the updated tuple", function() {
+            it("does not trigger #on_insert handlers", function() {
               tuple.age(34);
               expect(predicate.evaluate(tuple)).to(be_false);
-              expect(insert_handler).to_not(have_been_called, with_args(tuple));
+              expect(insert_handler).to_not(have_been_called);
             });
 
-            it("causes #on_remove handlers to be invoked with the updated tuple", function() {
+            it("triggers #on_remove handlers to be invoked with the updated tuple", function() {
               tuple.age(34);
               expect(predicate.evaluate(tuple)).to(be_false);
               expect(remove_handler).to(have_been_called);
             });
 
-            // TODO: Cover !triggering of on_update
+            it("does not trigger #on_update handlers", function() {
+              tuple.age(34);
+              expect(predicate.evaluate(tuple)).to(be_false);
+              expect(update_handler).to_not(have_been_called);
+            });
 
             it("does not #contain the updated tuple before the #on_remove handlers are triggered", function() {
               selection.on_remove(function() {
@@ -169,20 +194,23 @@ Screw.Unit(function(c) { with(c) {
           });
 
           context("when that tuple matches #predicate after the update", function() {
-            it("causes #on_insert handlers to be invoked with the updated tuple", function() {
+            it("triggers #on_insert handlers with the updated tuple", function() {
               tuple.age(21);
               expect(predicate.evaluate(tuple)).to(be_true);
               expect(insert_handler).to(have_been_called);
             });
 
-            it("does not cause #on_remove handlers to be invoked with the updated tuple", function() {
+            it("does not trigger #on_remove handlers", function() {
               tuple.age(21);
               expect(predicate.evaluate(tuple)).to(be_true);
               expect(remove_handler).to_not(have_been_called);
             });
 
-            // TODO: Cover !triggering of on_update
-
+            it("does not trigger #on_update handlers", function() {
+              tuple.age(21);
+              expect(predicate.evaluate(tuple)).to(be_true);
+              expect(update_handler).to_not(have_been_called);
+            });
 
             it("#contains the tuple before #on_insert handlers are fired", function() {
               selection.on_insert(function(tuple) {
@@ -206,8 +234,12 @@ Screw.Unit(function(c) { with(c) {
               expect(predicate.evaluate(tuple)).to(be_false);
               expect(remove_handler).to_not(have_been_called);
             });
-
-            // TODO: Cover !triggering of on_update
+            
+            it("does not trigger #on_update handlers", function() {
+              tuple.first_name("Danny");
+              expect(predicate.evaluate(tuple)).to(be_false);
+              expect(update_handler).to_not(have_been_called);
+            });
 
             it("continues to not #contain the tuple", function() {
               expect(selection.contains(tuple)).to(be_false);
