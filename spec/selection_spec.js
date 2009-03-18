@@ -122,6 +122,35 @@ Screw.Unit(function(c) { with(c) {
         });
       });
 
+      context("when a tuple is removed from the Selection's #operand", function() {
+        context("when that tuple matches #predicate", function() {
+          it("triggers #on_delete handlers with the deleted tuple", function() {
+            tuple = operand.find("dan");
+            expect(predicate.evaluate(tuple)).to(be_true);
+
+            operand.remove(tuple)
+
+            expect(remove_handler).to(have_been_called, with_args(tuple));
+          });
+
+          it("no longer #contains the deleted tuple before #on_delete handlers are triggered", function() {
+            selection.on_remove(function(tuple) {
+              expect(selection.contains(tuple)).to(be_false);
+            });
+
+            tuple = operand.find("dan");
+            expect(selection.contains(tuple)).to(be_true);
+
+            operand.remove(tuple)
+          });
+
+        });
+
+        context("when that tuple does not match #predicate", function() {
+
+        });
+      });
+
       context("when a tuple in the Selection's #operand is updated", function() {
         var tuple;
 
@@ -259,13 +288,15 @@ Screw.Unit(function(c) { with(c) {
               expect(selection.has_subscribers()).to(be_false);
             });
 
-            it("subscribes #on_insert and #on_update on #operand", function() {
+            it("subscribes #on_insert, #on_remove, and #on_update on #operand", function() {
               mock(operand, 'on_insert');
+              mock(operand, 'on_remove');
               mock(operand, 'on_update');
 
               selection.on_insert(function() {});
 
               expect(operand.on_insert).to(have_been_called);
+              expect(operand.on_remove).to(have_been_called);
               expect(operand.on_update).to(have_been_called);
             });
           });
@@ -277,11 +308,13 @@ Screw.Unit(function(c) { with(c) {
 
             it("does not subscribe to #operand", function() {
               mock(operand, 'on_insert');
+              mock(operand, 'on_remove');
               mock(operand, 'on_update');
 
               selection.on_insert(function() {});
 
               expect(operand.on_insert).to_not(have_been_called);
+              expect(operand.on_remove).to_not(have_been_called);
               expect(operand.on_update).to_not(have_been_called);
             });
           });
@@ -338,13 +371,15 @@ Screw.Unit(function(c) { with(c) {
               expect(selection.has_subscribers()).to(be_false);
             });
 
-            it("subscribes #on_remove and #on_update on #operand", function() {
+            it("subscribes #on_insert, #on_remove, and #on_update on #operand", function() {
               mock(operand, 'on_insert');
+              mock(operand, 'on_remove');
               mock(operand, 'on_update');
 
               selection.on_remove(function() {});
 
               expect(operand.on_insert).to(have_been_called);
+              expect(operand.on_remove).to(have_been_called);
               expect(operand.on_update).to(have_been_called);
             });
           });
@@ -355,11 +390,13 @@ Screw.Unit(function(c) { with(c) {
             });
 
             it("does not subscribe to #operand", function() {
+              mock(operand, 'on_insert');
               mock(operand, 'on_remove');
               mock(operand, 'on_update');
 
               selection.on_remove(function() {});
 
+              expect(operand.on_insert).to_not(have_been_called);
               expect(operand.on_remove).to_not(have_been_called);
               expect(operand.on_update).to_not(have_been_called);
             });
@@ -417,13 +454,15 @@ Screw.Unit(function(c) { with(c) {
               expect(selection.has_subscribers()).to(be_false);
             });
 
-            it("subscribes #on_insert and #on_update on #operand", function() {
+            it("subscribes #on_insert, #on_remove, and #on_update on #operand", function() {
               mock(operand, 'on_insert');
+              mock(operand, 'on_remove');
               mock(operand, 'on_update');
 
               selection.on_update(function() {});
 
               expect(operand.on_insert).to(have_been_called);
+              expect(operand.on_remove).to(have_been_called);
               expect(operand.on_update).to(have_been_called);
             });
           });
@@ -434,11 +473,13 @@ Screw.Unit(function(c) { with(c) {
             });
 
             it("does not subscribe to #operand", function() {
+              mock(operand, 'on_insert');
               mock(operand, 'on_remove');
               mock(operand, 'on_update');
 
               selection.on_update(function() {});
 
+              expect(operand.on_insert).to_not(have_been_called);
               expect(operand.on_remove).to_not(have_been_called);
               expect(operand.on_update).to_not(have_been_called);
             });
