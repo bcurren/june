@@ -78,7 +78,7 @@ Screw.Unit(function(c) { with(c) {
     });
 
     describe("event handling", function() {
-      var insert_handler, remove_handler, update_handler;
+      var insert_handler, remove_handler, update_handler, tuple;
       before(function() {
         insert_handler = mock_function();
         insert_handler.function_name = "insert handler";
@@ -107,8 +107,9 @@ Screw.Unit(function(c) { with(c) {
               expect(selection.contains(tuple)).to(be_true);
             });
 
+            tuple = new operand.Tuple({id: "mike", age: 21});
             expect(selection.contains(tuple)).to(be_false);
-            tuple = operand.create({id: "mike", age: 21});
+            operand.insert(tuple);
           });
         });
 
@@ -124,7 +125,7 @@ Screw.Unit(function(c) { with(c) {
 
       context("when a tuple is removed from the Selection's #operand", function() {
         context("when that tuple matches #predicate", function() {
-          it("triggers #on_delete handlers with the deleted tuple", function() {
+          it("triggers #on_remove handlers with the removed tuple", function() {
             tuple = operand.find("dan");
             expect(predicate.evaluate(tuple)).to(be_true);
 
@@ -133,7 +134,7 @@ Screw.Unit(function(c) { with(c) {
             expect(remove_handler).to(have_been_called, with_args(tuple));
           });
 
-          it("no longer #contains the deleted tuple before #on_delete handlers are triggered", function() {
+          it("no longer #contains the removed tuple before #on_remove handlers are triggered", function() {
             selection.on_remove(function(tuple) {
               expect(selection.contains(tuple)).to(be_false);
             });
@@ -147,13 +148,25 @@ Screw.Unit(function(c) { with(c) {
         });
 
         context("when that tuple does not match #predicate", function() {
+          before(function() {
+            tuple = operand.find("alice");
+            expect(predicate.evaluate(tuple)).to(be_false);
+          });
 
+          it("does not trigger #on_remove handlers", function() {
+            operand.remove(tuple);
+            expect(remove_handler).to_not(have_been_called);
+          });
+
+          it("continues to not #contain the removed tuple", function() {
+            expect(selection.contains(tuple)).to(be_false);
+            operand.remove(tuple);
+            expect(selection.contains(tuple)).to(be_false);
+          });
         });
       });
 
       context("when a tuple in the Selection's #operand is updated", function() {
-        var tuple;
-
         context("when that tuple matched #predicate before the update", function() {
           before(function() {
             tuple = operand.find("dan");
@@ -288,7 +301,7 @@ Screw.Unit(function(c) { with(c) {
           expect(operand.has_subscribers()).to(be_true);
           subscription.destroy();
           expect(operand.has_subscribers()).to(be_false);
-          selection.on_insert(function() {});
+          selection.on_update(function() {});
           expect(operand.has_subscribers()).to(be_true);
         });
       });
@@ -339,7 +352,7 @@ Screw.Unit(function(c) { with(c) {
           });
 
           context("when it is the last subscription to be destroyed", function() {
-            it("destroys the #on_insert and #on_update subscriptions on #operand", function() {
+            it("destroys the #on_insert, #on_remove, and #on_update subscriptions on #operand", function() {
               expect(selection.operand_subscriptions).to_not(be_empty);
               jQuery.each(selection.operand_subscriptions, function() {
                 mock(this, 'destroy');
