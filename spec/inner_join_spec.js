@@ -116,37 +116,65 @@ Screw.Unit(function(c) { with(c) {
         context("when a tuple is removed from the left operand", function() {
           context("when the removal causes the removal of a CompositeTuple from #cartesean_product that matched #predicate", function() {
             it("triggers #on_remove handlers with the removed CompositeTuple", function() {
-
+              var tuple = User.remove(User.find("bob"));
+              expect(remove_handler).to(have_been_called, once);
+              var removed_composite_tuple = remove_handler.most_recent_args[0];
+              expect(removed_composite_tuple.left).to(equal, tuple);
+              expect(removed_composite_tuple.right).to(equal, Pet.find("blue"));
             });
 
             it("no longer #contains the removed CompositeTuple before #on_remove handlers are triggered", function() {
-
-            });
-          });
-
-          context("when the removal causes the removal of multiple CompositeTuples from #cartesean_product that matched #predicate", function() {
-            it("triggers #on_remove handlers with the each of the removed CompositeTuples", function() {
-
-            });
-
-            it("no longer #contains each new CompositeTuple before its corresponding #on_remove handlers are triggered", function() {
-
+              join.on_remove(function(composite_tuple) {
+                expect(join.contains(composite_tuple)).to(be_false);
+              });
+              User.remove(User.find("bob"));
             });
           });
 
           context("when the removal does not cause the removal of any CompositeTuples from #cartesean_product that match #predicate", function() {
             it("does not trigger #on_remove handlers", function() {
-
+              User.remove(User.find("jean"));
+              expect(remove_handler).to_not(have_been_called);
             });
 
             it("does not modify the contents of #tuples", function() {
-
+              var num_tuples_before_removal = join.tuples().length;
+              User.remove(User.find("jean"));
+              expect(join.tuples().length).to(equal, num_tuples_before_removal);
             });
           });
         });
 
         context("when a tuple is removed from the right operand", function() {
-          // TODO: all the same specs from coverage of the left side
+          context("when the removal causes the removal of a CompositeTuple from #cartesean_product that matched #predicate", function() {
+            it("triggers #on_remove handlers with the removed CompositeTuple", function() {
+              var tuple = Pet.remove(Pet.find("blue"));
+              expect(remove_handler).to(have_been_called, once);
+              var removed_composite_tuple = remove_handler.most_recent_args[0];
+              expect(removed_composite_tuple.left).to(equal, User.find("bob"));
+              expect(removed_composite_tuple.right).to(equal, tuple);
+            });
+
+            it("no longer #contains the removed CompositeTuple before #on_remove handlers are triggered", function() {
+              join.on_remove(function(composite_tuple) {
+                expect(join.contains(composite_tuple)).to(be_false);
+              });
+              Pet.remove(Pet.find("blue"));
+            });
+          });
+
+          context("when the removal does not cause the removal of any CompositeTuples from #cartesean_product that match #predicate", function() {
+            it("does not trigger #on_remove handlers", function() {
+              User.remove(Pet.find("stray"));
+              expect(remove_handler).to_not(have_been_called);
+            });
+
+            it("does not modify the contents of #tuples", function() {
+              var num_tuples_before_removal = join.tuples().length;
+              Pet.remove(Pet.find("stray"));
+              expect(join.tuples().length).to(equal, num_tuples_before_removal);
+            });
+          });
         });
       });
     });
