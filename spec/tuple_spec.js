@@ -107,5 +107,11 @@ Screw.Unit(function(c) { with(c) {
         });
       });
     });
+
+    describe("#composed_sets", function() {
+      it("returns a singleton Array of #set", function() {
+        expect(tuple.composed_sets()).to(equal, [tuple.set]);
+      });
+    });
   });
 }});
