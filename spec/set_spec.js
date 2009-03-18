@@ -263,6 +263,35 @@ Screw.Unit(function(c) { with(c) {
       });
     });
 
+    describe("#has_subscribers", function() {
+      context("if a handler has been registered with #on_insert", function() {
+        it("returns true", function() {
+          User.on_insert(function() {});
+          expect(User.has_subscribers()).to(be_true);
+        });
+      });
+
+      context("if a handler has been registered with #on_remove", function() {
+        it("returns true", function() {
+          User.on_remove(function() {});
+          expect(User.has_subscribers()).to(be_true);
+        });
+      });
+
+      context("if a handler has been registered with #on_update", function() {
+        it("returns true", function() {
+          User.on_update(function() {});
+          expect(User.has_subscribers()).to(be_true);
+        });
+      });
+
+      context("if no handlers have been registered", function() {
+        it("returns false", function() {
+          expect(User.has_subscribers()).to(be_false);
+        });
+      });
+    });
+
     describe("event handling", function() {
       describe("when a tuple is inserted into the Set", function() {
         it("causes #on_insert handlers to be invoked with the inserted tuple", function() {

@@ -281,6 +281,18 @@ Screw.Unit(function(c) { with(c) {
     });
 
     describe("subscription propagation", function() {
+      describe("when a Subscription is registered for the Selection, destroyed, and another Subscription is registered", function() {
+        it("subscribes to its #operand, then unsubscribes, then resubscribes", function() {
+          expect(operand.has_subscribers()).to(be_false);
+          var subscription = selection.on_insert(function() {});
+          expect(operand.has_subscribers()).to(be_true);
+          subscription.destroy();
+          expect(operand.has_subscribers()).to(be_false);
+          selection.on_insert(function() {});
+          expect(operand.has_subscribers()).to(be_true);
+        });
+      });
+
       describe("#on_insert subscriptions", function() {
         describe("when an #on_insert subscription is registered", function() {
           context("when this is the first subscription", function() {
@@ -447,7 +459,7 @@ Screw.Unit(function(c) { with(c) {
         });
       });
 
-     describe("#on_update subscriptions", function() {
+      describe("#on_update subscriptions", function() {
         describe("when an #on_update subscription is registered", function() {
           context("when this is the first subscription", function() {
             before(function() {
