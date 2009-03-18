@@ -294,39 +294,35 @@ Screw.Unit(function(c) { with(c) {
 
     describe("event handling", function() {
       describe("when a tuple is inserted into the Set", function() {
-        it("causes #on_insert handlers to be invoked with the inserted tuple", function() {
-          var on_insert_args = [];
-          User.on_insert(function() {
-            on_insert_args.push(arguments);
-          });
+        it("triggers #on_insert handlers with the inserted tuple", function() {
+          var insert_handler = mock_function();
+          insert_handler.function_name = "insert handler";
+          User.on_insert(insert_handler);
           
-          User.create({id: "emma", first_name: "Emma"});
-
-          expect(on_insert_args.length).to(equal, 1);
-          expect(on_insert_args[0][0].id()).to(equal, "emma");
-          expect(on_insert_args[0][0].first_name()).to(equal, "Emma");
+          var tuple = User.create({id: "emma", first_name: "Emma"});
+          expect(insert_handler).to(have_been_called, once);
+          expect(insert_handler).to(have_been_called, with_args(tuple));
         });
       });
 
       describe("when a tuple in the Set is removed", function() {
-        it("causes #on_remove handlers to be invoked with the deleted tuple", function() {
-          var on_remove_args = [];
-          User.on_remove(function() {
-            on_remove_args.push(arguments);
-          });
+        it("triggers #on_remove handlers with the removed tuple", function() {
+          var remove_handler = mock_function();
+          remove_handler.function_name = "remove handler";
+          User.on_remove(remove_handler);
 
           var tuple = User.find("bob");
           User.remove(tuple);
-          expect(on_remove_args[0][0]).to(equal, tuple);
+          
+          expect(remove_handler).to(have_been_called, once);
+          expect(remove_handler).to(have_been_called, with_args(tuple));
         });
       });
 
       describe("when a tuple in the Set is updated", function() {
-        it("causes #on_update handlers to be invoked with the updated tuple", function() {
-          var on_remove_args = [];
-
+        it("triggers #on_update handlers with the updated tuple", function() {
           var update_handler = mock_function();
-          update_handler.function_name = "tuple update handler";
+          update_handler.function_name = "update handler";
           User.on_update(update_handler);
 
           var tuple = User.find("bob");
@@ -335,6 +331,7 @@ Screw.Unit(function(c) { with(c) {
           var new_value = old_value + 1;
           
           tuple.age(new_value);
+          expect(update_handler).to(have_been_called, once);
           expect(update_handler).to(have_been_called, with_args(tuple));
         });
       });
