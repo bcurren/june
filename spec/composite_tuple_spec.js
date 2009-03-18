@@ -26,9 +26,7 @@ Screw.Unit(function(c) { with(c) {
 
 
     describe("#tuple_for_set", function() {
-
-
-      var flat_compound_tuple, deep_compound_tuple_left, deep_compound_tuple_right;
+      var flat_composite_tuple, deep_composite_tuple_left, deep_composite_tuple_right;
       
       before(function() {
         flat_composite_tuple = new June.CompositeTuple(User.find("bob"), Pet.find("blue"));
