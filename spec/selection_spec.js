@@ -221,7 +221,7 @@ Screw.Unit(function(c) { with(c) {
             it("does not #contain the updated tuple before the #on_remove handlers are triggered", function() {
               selection.on_remove(function() {
                 expect(selection.contains(tuple)).to(be_false);
-              })
+              });
 
               expect(selection.contains(tuple)).to(be_true);
               tuple.age(34);
@@ -257,7 +257,7 @@ Screw.Unit(function(c) { with(c) {
             it("#contains the tuple before #on_insert handlers are fired", function() {
               selection.on_insert(function(tuple) {
                 expect(selection.contains(tuple)).to(be_true);
-              })
+              });
 
               expect(selection.contains(tuple)).to(be_false);
               tuple.age(21);
@@ -295,14 +295,24 @@ Screw.Unit(function(c) { with(c) {
 
     describe("subscription propagation", function() {
       describe("when a Subscription is registered for the Selection, destroyed, and another Subscription is registered", function() {
-        it("subscribes to its #operand, then unsubscribes, then resubscribes", function() {
+        it("subscribes to its #operand and memoizes #tuples, then unsubscribes and clears the memoization, then resubscribes and rememoizes", function() {
           expect(operand.has_subscribers()).to(be_false);
+          expect(selection._tuples).to(be_null);
+
           var subscription = selection.on_insert(function() {});
+
           expect(operand.has_subscribers()).to(be_true);
+          expect(selection._tuples).to_not(be_null);
+
           subscription.destroy();
+
           expect(operand.has_subscribers()).to(be_false);
+          expect(selection._tuples).to(be_null);
+
           selection.on_update(function() {});
+
           expect(operand.has_subscribers()).to(be_true);
+          expect(selection._tuples).to_not(be_null);
         });
       });
 
