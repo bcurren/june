@@ -108,9 +108,17 @@ Screw.Unit(function(c) { with(c) {
       });
     });
 
-    describe("#composed_sets", function() {
-      it("returns a singleton Array of #set", function() {
-        expect(tuple.composed_sets()).to(equal, [tuple.set]);
+    describe("#has_attribute", function() {
+      context("when the given Attribute's #set matches the tuple's #set", function() {
+        it("returns true", function() {
+          expect(tuple.has_attribute(User.id)).to(be_true);
+        });
+      });
+
+      context("when the given Attribute's #set does not match the tuple's #set", function() {
+        it("returns false", function() {
+          expect(tuple.has_attribute(Pet.id)).to(be_false);
+        });
       });
     });
   });

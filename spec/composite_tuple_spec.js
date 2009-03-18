@@ -71,18 +71,30 @@ Screw.Unit(function(c) { with(c) {
         });
       });
 
-      describe("when niether the #left nor the #right returns a tuple from #tuple_for_set", function() {
+      describe("when neither the #left nor the #right returns a tuple from #tuple_for_set", function() {
         it("returns null", function() {
           expect(flat.tuple_for_set(Species)).to(equal, null);
         });
       });
     });
-    
-    describe("#composed_sets", function() {
-      it("returns the #composed_sets of the #left and #right tuples", function() {
-        var expected_composed_sets = deep_on_the_left.left.composed_sets().concat(deep_on_the_left.right.composed_sets());
-        expect(expected_composed_sets.length).to(equal, 3);
-        expect(deep_on_the_left.composed_sets()).to(equal, expected_composed_sets);
+
+    describe("#has_attribute", function() {
+      context("when #left.has_attribute returns true", function() {
+        it("returns true", function() {
+          expect(deep_on_the_left.has_attribute(Pet.name)).to(be_true);
+        });
+      });
+
+      context("when #right.has_attribute returns true", function() {
+        it("returns true", function() {
+          expect(deep_on_the_right.has_attribute(Pet.name)).to(be_true);
+        });
+      });
+
+      context("when neither #left.has_attribute nor #right.has_attribute returns true", function() {
+        it("returns false", function() {
+          expect(flat.has_attribute(Species.id)).to(be_false);
+        });
       });
     });
   });
