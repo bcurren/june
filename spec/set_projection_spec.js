@@ -173,23 +173,40 @@ Screw.Unit(function(c) { with(c) {
       });
 
       context("when a tuple in the Projection's #operand is updated", function() {
-        context("when the tuple that was updated corresponds to #projected_set", function() {
-          it("triggers #on_update handlers with the projected tuple", function() {
+        var tuple;
 
+        context("when the tuple that was updated corresponds to #projected_set", function() {
+          before(function() {
+            tuple = User.find("bob");
+          });
+
+          it("triggers #on_update handlers with the projected tuple", function() {
+            tuple.first_name("robérto");
+            expect(update_handler).to(have_been_called, once);
+            expect(update_handler).to(have_been_called, with_args(tuple));
           });
 
           it("does not modify #tuples", function() {
-
+            var num_tuples_before_update = projection.tuples().length;
+            tuple.first_name("boba tea");
+            expect(projection.tuples().length).to(equal, num_tuples_before_update);
           });
         });
 
         context("when the tuple that was updated does NOT correspond to #projected_set", function() {
-          it("does NOT trigger #on_update handlers with the projected tuple", function() {
+          before(function() {
+            tuple = Pet.find("blue");
+          });
 
+          it("does NOT trigger #on_update handlers with the projected tuple", function() {
+            tuple.name("worthless");
+            expect(update_handler).to_not(have_been_called);
           });
 
           it("does not modify #tuples", function() {
-
+            var num_tuples_before_update = projection.tuples().length;
+            tuple.name("worthless");
+            expect(projection.tuples().length).to(equal, num_tuples_before_update);
           });
         });
       });
