@@ -418,6 +418,49 @@ Screw.Unit(function(c) { with(c) {
             });
           });
         });
+
+        context("when a tuple is updated in a way that should insert one CompositeTuple and remove another", function() {
+          var pet, current_owner, new_owner;
+
+          before(function() {
+            pet = Pet.find("blue");
+            current_owner = pet.owner();
+            new_owner = User.find("alice");
+          });
+
+          it("fires #on_insert handlers for the inserted tuple", function() {
+            pet.owner_id(new_owner.id());
+
+            expect(insert_handler).to(have_been_called, once);
+
+            var composite_tuple = insert_handler.most_recent_args[0];
+            expect(composite_tuple.left).to(equal, new_owner);
+            expect(composite_tuple.right).to(equal, pet);
+          });
+
+          it("fires #on_remove handlers for the removed tuple", function() {
+            pet.owner_id(new_owner.id());
+
+            expect(remove_handler).to(have_been_called, once);
+
+            var composite_tuple = remove_handler.most_recent_args[0];
+            expect(composite_tuple.left).to(equal, current_owner);
+            expect(composite_tuple.right).to(equal, pet);
+          });
+
+          it("updates #tuples appropriately", function() {
+            var old_composite_tuple = new June.CompositeTuple(current_owner, pet);
+            var new_composite_tuple = new June.CompositeTuple(new_owner, pet);
+
+            expect(join.find_composite_tuple_that_matches(old_composite_tuple)).to_not(be_null);
+            expect(join.find_composite_tuple_that_matches(new_composite_tuple)).to(be_null);
+
+            pet.owner_id(new_owner.id());
+            
+            expect(join.find_composite_tuple_that_matches(old_composite_tuple)).to(be_null);
+            expect(join.find_composite_tuple_that_matches(new_composite_tuple)).to_not(be_null);
+          });
+        });
       });
     });
   });
