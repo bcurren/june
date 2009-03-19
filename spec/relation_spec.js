@@ -22,6 +22,27 @@ Screw.Unit(function(c) { with(c) {
       });
     });
 
+    describe("#find", function() {
+      context("when passed an id", function() {
+        it("returns the first element of a selection where relation.id is equal to the given id", function() {
+          expect(User.find("bob")).to(equal, User.where(User.id.eq("bob")).first());
+        });
+      });
+
+      context("when passed a predicate", function() {
+        it("returns the first element of a selection constructed with the given predicate", function() {
+          var predicate = User.age.eq(21);
+          expect(User.find(predicate)).to(equal, User.where(predicate).first());
+        });
+      });
+    });
+
+    describe("#first", function() {
+      it("returns the first element of #tuples", function() {
+        expect(User.first()).to(equal, User.tuples()[0]);
+      });
+    });
+
     describe("#map", function() {
       it("returns a new Array built by invoking the given function on each tuple in the relation", function() {
         var expected_result = [];
