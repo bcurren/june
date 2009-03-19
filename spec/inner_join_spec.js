@@ -463,5 +463,345 @@ Screw.Unit(function(c) { with(c) {
         });
       });
     });
+
+
+    describe("subscription propagation", function() {
+      describe("when a Subscription is registered for the Join, destroyed, and another Subscription is registered", function() {
+        it("subscribes to its #left_operand and #right_operand and memoizes #tuples, then unsubscribes and clears the memoization, then resubscribes and rememoizes", function() {
+          expect(left_operand.has_subscribers()).to(be_false);
+          expect(right_operand.has_subscribers()).to(be_false);
+          expect(join._tuples).to(be_null);
+
+          var subscription = join.on_insert(function() {});
+
+          expect(left_operand.has_subscribers()).to(be_true);
+          expect(right_operand.has_subscribers()).to(be_true);
+          expect(join._tuples).to_not(be_null);
+
+          subscription.destroy();
+
+          expect(left_operand.has_subscribers()).to(be_false);
+          expect(right_operand.has_subscribers()).to(be_false);
+          expect(join._tuples).to(be_null);
+
+          join.on_update(function() {});
+
+          expect(left_operand.has_subscribers()).to(be_true);
+          expect(right_operand.has_subscribers()).to(be_true);
+          expect(join._tuples).to_not(be_null);
+        });
+      });
+
+      describe("#on_insert subscriptions", function() {
+        describe("when an #on_insert subscription is registered", function() {
+          context("when this is the first subscription", function() {
+            before(function() {
+              expect(join.has_subscribers()).to(be_false);
+            });
+
+            it("subscribes #on_insert, #on_remove, and #on_update on #left_operand and #right_operand", function() {
+              mock(left_operand, 'on_insert');
+              mock(left_operand, 'on_remove');
+              mock(left_operand, 'on_update');
+              mock(right_operand, 'on_insert');
+              mock(right_operand, 'on_remove');
+              mock(right_operand, 'on_update');
+
+              join.on_insert(function() {});
+
+              expect(left_operand.on_insert).to(have_been_called);
+              expect(left_operand.on_remove).to(have_been_called);
+              expect(left_operand.on_update).to(have_been_called);
+              expect(right_operand.on_insert).to(have_been_called);
+              expect(right_operand.on_remove).to(have_been_called);
+              expect(right_operand.on_update).to(have_been_called);
+            });
+          });
+
+          context("when this is not the first subscription", function() {
+            before(function() {
+              join.on_insert(function() {});
+            });
+
+            it("does not subscribe to #left_operand and #right_operand", function() {
+              mock(left_operand, 'on_insert');
+              mock(left_operand, 'on_remove');
+              mock(left_operand, 'on_update');
+              mock(right_operand, 'on_insert');
+              mock(right_operand, 'on_remove');
+              mock(right_operand, 'on_update');
+
+              join.on_insert(function() {});
+
+              expect(left_operand.on_insert).to_not(have_been_called);
+              expect(left_operand.on_remove).to_not(have_been_called);
+              expect(left_operand.on_update).to_not(have_been_called);
+              expect(right_operand.on_insert).to_not(have_been_called);
+              expect(right_operand.on_remove).to_not(have_been_called);
+              expect(right_operand.on_update).to_not(have_been_called);
+            });
+          });
+        });
+
+        describe("when an #on_insert subscription is destroyed", function() {
+          var subscription;
+          before(function() {
+            subscription = join.on_insert(function() {});
+          });
+
+          context("when it is the last subscription to be destroyed", function() {
+            it("destroys the #on_insert, #on_remove, and #on_update subscriptions on #left_operand and #right_operand", function() {
+              expect(join.operand_subscriptions.length).to(equal, 6);
+
+              var subscriptions = [];
+              jQuery.each(join.operand_subscriptions, function() {
+                subscriptions.push(this);
+                mock(this, 'destroy');
+              });
+
+              subscription.destroy();
+
+              jQuery.each(subscriptions, function() {
+                expect(this.destroy).to(have_been_called);
+              });
+              expect(join.operand_subscriptions).to(be_empty);
+            });
+
+          });
+
+          context("when it is not the last subscription to be destroyed", function() {
+            var subscription1, subscription2;
+            before(function() {
+              subscription1 = join.on_insert(function() {});
+              subscription2 = join.on_insert(function() {});
+            });
+
+            it("does not destroy the #on_insert and #on_update subscriptions on #operand", function() {
+              expect(join.operand_subscriptions.length).to(equal, 6);
+
+              jQuery.each(join.operand_subscriptions, function() {
+                mock(this, 'destroy');
+              });
+
+              subscription1.destroy();
+
+              jQuery.each(join.operand_subscriptions, function() {
+                expect(this.destroy).to_not(have_been_called);
+              });
+
+              expect(join.operand_subscriptions.length).to(equal, 6);
+            });
+          });
+        });
+      });
+
+      describe("#on_remove subscriptions", function() {
+        describe("when an #on_remove subscription is registered", function() {
+          context("when this is the first subscription", function() {
+            before(function() {
+              expect(join.has_subscribers()).to(be_false);
+            });
+
+            it("subscribes #on_insert, #on_remove, and #on_update on #left_operand and #right_operand", function() {
+              mock(left_operand, 'on_insert');
+              mock(left_operand, 'on_remove');
+              mock(left_operand, 'on_update');
+              mock(right_operand, 'on_insert');
+              mock(right_operand, 'on_remove');
+              mock(right_operand, 'on_update');
+
+              join.on_remove(function() {});
+
+              expect(left_operand.on_insert).to(have_been_called);
+              expect(left_operand.on_remove).to(have_been_called);
+              expect(left_operand.on_update).to(have_been_called);
+              expect(right_operand.on_insert).to(have_been_called);
+              expect(right_operand.on_remove).to(have_been_called);
+              expect(right_operand.on_update).to(have_been_called);
+            });
+          });
+
+          context("when this is not the first subscription", function() {
+            before(function() {
+              join.on_remove(function() {});
+            });
+
+            it("does not subscribe to #left_operand and #right_operand", function() {
+              mock(left_operand, 'on_insert');
+              mock(left_operand, 'on_remove');
+              mock(left_operand, 'on_update');
+              mock(right_operand, 'on_insert');
+              mock(right_operand, 'on_remove');
+              mock(right_operand, 'on_update');
+
+              join.on_remove(function() {});
+
+              expect(left_operand.on_insert).to_not(have_been_called);
+              expect(left_operand.on_remove).to_not(have_been_called);
+              expect(left_operand.on_update).to_not(have_been_called);
+              expect(right_operand.on_insert).to_not(have_been_called);
+              expect(right_operand.on_remove).to_not(have_been_called);
+              expect(right_operand.on_update).to_not(have_been_called);
+            });
+          });
+        });
+
+        describe("when an #on_remove subscription is destroyed", function() {
+          var subscription;
+          before(function() {
+            subscription = join.on_remove(function() {});
+          });
+
+          context("when it is the last subscription to be destroyed", function() {
+            it("destroys the #on_insert, #on_remove, and #on_update subscriptions on #left_operand and #right_operand", function() {
+              expect(join.operand_subscriptions.length).to(equal, 6);
+
+              var subscriptions = [];
+              jQuery.each(join.operand_subscriptions, function() {
+                subscriptions.push(this);
+                mock(this, 'destroy');
+              });
+
+              subscription.destroy();
+
+              jQuery.each(subscriptions, function() {
+                expect(this.destroy).to(have_been_called);
+              });
+              expect(join.operand_subscriptions).to(be_empty);
+            });
+
+          });
+
+          context("when it is not the last subscription to be destroyed", function() {
+            var subscription1, subscription2;
+            before(function() {
+              subscription1 = join.on_remove(function() {});
+              subscription2 = join.on_remove(function() {});
+            });
+
+            it("does not destroy the #on_insert and #on_update subscriptions on #operand", function() {
+              expect(join.operand_subscriptions.length).to(equal, 6);
+
+              jQuery.each(join.operand_subscriptions, function() {
+                mock(this, 'destroy');
+              });
+
+              subscription1.destroy();
+
+              jQuery.each(join.operand_subscriptions, function() {
+                expect(this.destroy).to_not(have_been_called);
+              });
+
+              expect(join.operand_subscriptions.length).to(equal, 6);
+            });
+          });
+        });
+      });
+
+      describe("#on_update subscriptions", function() {
+        describe("when an #on_update subscription is registered", function() {
+          context("when this is the first subscription", function() {
+            before(function() {
+              expect(join.has_subscribers()).to(be_false);
+            });
+
+            it("subscribes #on_insert, #on_remove, and #on_update on #left_operand and #right_operand", function() {
+              mock(left_operand, 'on_insert');
+              mock(left_operand, 'on_remove');
+              mock(left_operand, 'on_update');
+              mock(right_operand, 'on_insert');
+              mock(right_operand, 'on_remove');
+              mock(right_operand, 'on_update');
+
+              join.on_update(function() {});
+
+              expect(left_operand.on_insert).to(have_been_called);
+              expect(left_operand.on_remove).to(have_been_called);
+              expect(left_operand.on_update).to(have_been_called);
+              expect(right_operand.on_insert).to(have_been_called);
+              expect(right_operand.on_remove).to(have_been_called);
+              expect(right_operand.on_update).to(have_been_called);
+            });
+          });
+
+          context("when this is not the first subscription", function() {
+            before(function() {
+              join.on_update(function() {});
+            });
+
+            it("does not subscribe to #left_operand and #right_operand", function() {
+              mock(left_operand, 'on_insert');
+              mock(left_operand, 'on_remove');
+              mock(left_operand, 'on_update');
+              mock(right_operand, 'on_insert');
+              mock(right_operand, 'on_remove');
+              mock(right_operand, 'on_update');
+
+              join.on_update(function() {});
+
+              expect(left_operand.on_insert).to_not(have_been_called);
+              expect(left_operand.on_remove).to_not(have_been_called);
+              expect(left_operand.on_update).to_not(have_been_called);
+              expect(right_operand.on_insert).to_not(have_been_called);
+              expect(right_operand.on_remove).to_not(have_been_called);
+              expect(right_operand.on_update).to_not(have_been_called);
+            });
+          });
+        });
+
+        describe("when an #on_update subscription is destroyed", function() {
+          var subscription;
+          before(function() {
+            subscription = join.on_update(function() {});
+          });
+
+          context("when it is the last subscription to be destroyed", function() {
+            it("destroys the #on_insert, #on_remove, and #on_update subscriptions on #left_operand and #right_operand", function() {
+              expect(join.operand_subscriptions.length).to(equal, 6);
+
+              var subscriptions = [];
+              jQuery.each(join.operand_subscriptions, function() {
+                subscriptions.push(this);
+                mock(this, 'destroy');
+              });
+
+              subscription.destroy();
+
+              jQuery.each(subscriptions, function() {
+                expect(this.destroy).to(have_been_called);
+              });
+              expect(join.operand_subscriptions).to(be_empty);
+            });
+
+          });
+
+          context("when it is not the last subscription to be destroyed", function() {
+            var subscription1, subscription2;
+            before(function() {
+              subscription1 = join.on_update(function() {});
+              subscription2 = join.on_update(function() {});
+            });
+
+            it("does not destroy the #on_insert and #on_update subscriptions on #operand", function() {
+              expect(join.operand_subscriptions.length).to(equal, 6);
+
+              jQuery.each(join.operand_subscriptions, function() {
+                mock(this, 'destroy');
+              });
+
+              subscription1.destroy();
+
+              jQuery.each(join.operand_subscriptions, function() {
+                expect(this.destroy).to_not(have_been_called);
+              });
+
+              expect(join.operand_subscriptions.length).to(equal, 6);
+            });
+          });
+        });
+      });
+    });
+
+
   });
 }});
