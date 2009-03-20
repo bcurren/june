@@ -42,18 +42,23 @@ Screw.Unit(function(c) { with(c) {
 
 
         context("when the new value is different than the old value", function() {
-
           context("when #update_notification_enabled is true", function() {
             before(function() {
               expect(tuple.update_notification_enabled).to(be_true);
             });
 
-            it("calls #tuple_updated on the tuple's #set with the updated tuple", function() {
+            it("calls #tuple_updated on the tuple's #set with the updated tuple and a changed attributes object", function() {
               var old_value = tuple.age();
               var new_value = old_value + 1;
 
               tuple.set_field_value(tuple.set.age, new_value);
-              expect(tuple.set.tuple_updated).to(have_been_called, with_args(tuple));
+              expect(tuple.set.tuple_updated).to(have_been_called, once);
+
+              var changed_attributes = tuple.set.tuple_updated.most_recent_args;
+
+              expect(changed_attributes.age.old_value).to(equal, old_value);
+              expect(changed_attributes.age.new_value).to(equal, new_value);
+              expect(changed_attributes.age.attribute).to(equal, tuple.set.age);
             });
           });
 

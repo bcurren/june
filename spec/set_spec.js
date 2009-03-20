@@ -320,7 +320,7 @@ Screw.Unit(function(c) { with(c) {
       });
 
       describe("when a tuple in the Set is updated", function() {
-        it("triggers #on_update handlers with the updated tuple", function() {
+        it("triggers #on_update handlers with the updated tuple and a changed attributes object", function() {
           var update_handler = mock_function();
           update_handler.function_name = "update handler";
           User.on_update(update_handler);
@@ -332,7 +332,14 @@ Screw.Unit(function(c) { with(c) {
           
           tuple.age(new_value);
           expect(update_handler).to(have_been_called, once);
-          expect(update_handler).to(have_been_called, with_args(tuple));
+
+          expect(update_handler.most_recent_args[0]).to(equal, tuple);
+          var changed_attributes = update_handler.most_recent_args[1];
+
+          expect(changed_attributes.age).to_not(equal, null);
+          expect(changed_attributes.age.old_value).to(equal, old_value);
+          expect(changed_attributes.age.new_value).to(equal, new_value);
+          expect(changed_attributes.age.attribute).to(equal, User.age);
         });
       });
     });
