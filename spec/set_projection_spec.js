@@ -178,6 +178,7 @@ Screw.Unit(function(c) { with(c) {
         context("when the tuple that was updated corresponds to #projected_set", function() {
           before(function() {
             tuple = User.find("bob");
+            expect(tuple.set == projected_set).to(be_true);
           });
 
           it("triggers #on_update handlers with the projected tuple", function() {
@@ -196,6 +197,7 @@ Screw.Unit(function(c) { with(c) {
         context("when the tuple that was updated does NOT correspond to #projected_set", function() {
           before(function() {
             tuple = Pet.find("blue");
+            expect(tuple.set == projected_set).to(be_false);
           });
 
           it("does NOT trigger #on_update handlers with the projected tuple", function() {

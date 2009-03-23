@@ -201,10 +201,19 @@ Screw.Unit(function(c) { with(c) {
                 expect(remove_handler).to_not(have_been_called);
               });
 
-              it("triggers #on_update handlers with the updated CompositeTuple", function() {
-                tuple.age(44);
+              it("triggers #on_update handlers with the updated CompositeTuple and a changed attributes object", function() {
+                var old_value = tuple.age();
+                var new_value = 44;
+                tuple.age(new_value);
                 expect(update_handler).to(have_been_called, once);
-                expect(update_handler.most_recent_args[0].left).to(equal, tuple);
+                var updated_tuple = update_handler.most_recent_args[0];
+                var changed_attributes = update_handler.most_recent_args[1];
+
+                expect(updated_tuple.left).to(equal, tuple);
+
+                expect(changed_attributes.age.attribute).to(equal, tuple.set.age);
+                expect(changed_attributes.age.old_value).to(equal, old_value);
+                expect(changed_attributes.age.new_value).to(equal, new_value);
               });
 
               it("does not modify the contents of #tuples", function() {
@@ -318,10 +327,19 @@ Screw.Unit(function(c) { with(c) {
               });
 
               it("triggers #on_update handlers with the updated CompositeTuple", function() {
-                tuple.name("booboo");
+                var old_value = tuple.name();
+                var new_value = "booboo"
+                tuple.name(new_value);
 
                 expect(update_handler).to(have_been_called, once);
-                expect(update_handler.most_recent_args[0].right).to(equal, tuple);
+
+                var updated_tuple = update_handler.most_recent_args[0];
+                var changed_attributes = update_handler.most_recent_args[1];
+
+                expect(updated_tuple.right).to(equal, tuple);
+                expect(changed_attributes.name.attribute).to(equal, tuple.set.name);
+                expect(changed_attributes.name.old_value).to(equal, old_value);
+                expect(changed_attributes.name.new_value).to(equal, new_value);
               });
 
               it("does not modify the contents of #tuples", function() {

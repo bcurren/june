@@ -186,10 +186,20 @@ Screw.Unit(function(c) { with(c) {
               expect(remove_handler).to_not(have_been_called);
             });
 
-            it("triggers #on_update handlers with the updated tuple", function() {
-              tuple.first_name("Danny");
+            it("triggers #on_update handlers with the updated tuple and a changed attributes object", function() {
+              var old_value = tuple.first_name();
+              var new_value = "Danny";
+              tuple.first_name(new_value);
               expect(predicate.evaluate(tuple)).to(be_true);
-              expect(update_handler).to(have_been_called, with_args(tuple));
+
+              expect(update_handler).to(have_been_called, once);
+
+              var updated_tuple = update_handler.most_recent_args[0];
+              var updated_attributes = update_handler.most_recent_args[1];
+              expect(updated_tuple).to(equal, tuple);
+              expect(updated_attributes.first_name.attribute).to(equal, tuple.set.first_name);
+              expect(updated_attributes.first_name.old_value).to(equal, old_value);
+              expect(updated_attributes.first_name.new_value).to(equal, new_value);
             });
 
             it("continues to #contain the tuple", function() {

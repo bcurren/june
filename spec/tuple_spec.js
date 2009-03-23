@@ -2,7 +2,6 @@ require("/specs/june_spec_helper");
 
 Screw.Unit(function(c) { with(c) {
   describe("The generated Set.Tuple constructor associated with each Set", function() {
-
     var tuple;
     before(function() {
       tuple = User.find("bob");
@@ -40,7 +39,6 @@ Screw.Unit(function(c) { with(c) {
           expect(tuple.get_field_value(tuple.set.first_name)).to(equal, "Wil");
         });
 
-
         context("when the new value is different than the old value", function() {
           context("when #update_notification_enabled is true", function() {
             before(function() {
@@ -54,8 +52,7 @@ Screw.Unit(function(c) { with(c) {
               tuple.set_field_value(tuple.set.age, new_value);
               expect(tuple.set.tuple_updated).to(have_been_called, once);
 
-              var changed_attributes = tuple.set.tuple_updated.most_recent_args;
-
+              var changed_attributes = tuple.set.tuple_updated.most_recent_args[1];
               expect(changed_attributes.age.old_value).to(equal, old_value);
               expect(changed_attributes.age.new_value).to(equal, new_value);
               expect(changed_attributes.age.attribute).to(equal, tuple.set.age);
