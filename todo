@@ -1,12 +1,4 @@
-Selection#on_update
-Selection#on_delete
-
-selection's transitive unsubscribe for delete handlers
-
-
-
+factor out relation commonalities
 domain snapshot merging
-event propagation through relations
 domain object / global domain
-base attributes on
 remote repository proxy

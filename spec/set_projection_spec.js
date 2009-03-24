@@ -213,5 +213,278 @@ Screw.Unit(function(c) { with(c) {
         });
       });
     });
+
+    describe("subscription propagation", function() {
+      describe("when a Subscription is registered for the SetProjection, destroyed, and another Subscription is registered", function() {
+        it("subscribes to its #operand and memoizes #tuples, then unsubscribes and clears the memoization, then resubscribes and rememoizes", function() {
+          expect(operand.has_subscribers()).to(be_false);
+          expect(projection._tuples).to(be_null);
+
+          var subscription = projection.on_insert(function() {});
+
+          expect(operand.has_subscribers()).to(be_true);
+          expect(projection._tuples).to_not(be_null);
+
+          subscription.destroy();
+
+          expect(operand.has_subscribers()).to(be_false);
+          expect(projection._tuples).to(be_null);
+
+          projection.on_update(function() {});
+
+          expect(operand.has_subscribers()).to(be_true);
+          expect(projection._tuples).to_not(be_null);
+        });
+      });
+
+      describe("#on_insert subscriptions", function() {
+        describe("when an #on_insert subscription is registered", function() {
+          context("when this is the first subscription", function() {
+            before(function() {
+              expect(projection.has_subscribers()).to(be_false);
+            });
+
+            it("subscribes #on_insert, #on_remove, and #on_update on #operand", function() {
+              mock(operand, 'on_insert');
+              mock(operand, 'on_remove');
+              mock(operand, 'on_update');
+
+              projection.on_insert(function() {});
+
+              expect(operand.on_insert).to(have_been_called);
+              expect(operand.on_remove).to(have_been_called);
+              expect(operand.on_update).to(have_been_called);
+            });
+          });
+
+          context("when this is not the first subscription", function() {
+            before(function() {
+              projection.on_insert(function() {});
+            });
+
+            it("does not subscribe to #operand", function() {
+              mock(operand, 'on_insert');
+              mock(operand, 'on_remove');
+              mock(operand, 'on_update');
+
+              projection.on_insert(function() {});
+
+              expect(operand.on_insert).to_not(have_been_called);
+              expect(operand.on_remove).to_not(have_been_called);
+              expect(operand.on_update).to_not(have_been_called);
+            });
+          });
+        });
+
+        describe("when an #on_insert subscription is destroyed", function() {
+          var subscription;
+          before(function() {
+            subscription = projection.on_insert(function() {});
+          });
+
+          context("when it is the last subscription to be destroyed", function() {
+            it("destroys the #on_insert, #on_remove, and #on_update subscriptions on #operand", function() {
+              expect(projection.operand_subscriptions).to_not(be_empty);
+              jQuery.each(projection.operand_subscriptions, function() {
+                mock(this, 'destroy');
+              });
+
+              subscription.destroy();
+
+              jQuery.each(projection.operand_subscriptions, function() {
+                expect(this.destroy).to(have_been_called);
+              });
+              expect(projection.operand_subscriptions).to(be_empty);
+            });
+          });
+
+          context("when it is not the last subscription to be destroyed", function() {
+            before(function() {
+              projection.on_insert(function() {});
+            });
+
+            it("does not destroy the #on_insert and #on_update subscriptions on #operand", function() {
+              expect(projection.operand_subscriptions).to_not(be_empty);
+              jQuery.each(projection.operand_subscriptions, function() {
+                mock(this, 'destroy');
+              });
+
+              subscription.destroy();
+
+              jQuery.each(projection.operand_subscriptions, function() {
+                expect(this.destroy).to_not(have_been_called);
+              });
+              expect(projection.operand_subscriptions).to_not(be_empty);
+            });
+          });
+        });
+      });
+
+      describe("#on_remove subscriptions", function() {
+        describe("when an #on_remove subscription is registered", function() {
+          context("when this is the first subscription", function() {
+            before(function() {
+              expect(projection.has_subscribers()).to(be_false);
+            });
+
+            it("subscribes #on_insert, #on_remove, and #on_update on #operand", function() {
+              mock(operand, 'on_insert');
+              mock(operand, 'on_remove');
+              mock(operand, 'on_update');
+
+              projection.on_remove(function() {});
+
+              expect(operand.on_insert).to(have_been_called);
+              expect(operand.on_remove).to(have_been_called);
+              expect(operand.on_update).to(have_been_called);
+            });
+          });
+
+          context("when this is not the first subscription", function() {
+            before(function() {
+              projection.on_remove(function() {});
+            });
+
+            it("does not subscribe to #operand", function() {
+              mock(operand, 'on_insert');
+              mock(operand, 'on_remove');
+              mock(operand, 'on_update');
+
+              projection.on_remove(function() {});
+
+              expect(operand.on_insert).to_not(have_been_called);
+              expect(operand.on_remove).to_not(have_been_called);
+              expect(operand.on_update).to_not(have_been_called);
+            });
+          });
+        });
+
+        describe("when an #on_remove subscription is destroyed", function() {
+          var subscription;
+          before(function() {
+            subscription = projection.on_remove(function() {});
+          });
+
+          context("when it is the last subscription to be destroyed", function() {
+            it("destroys the #on_insert and #on_update subscriptions on #operand", function() {
+              expect(projection.operand_subscriptions).to_not(be_empty);
+              jQuery.each(projection.operand_subscriptions, function() {
+                mock(this, 'destroy');
+              });
+
+              subscription.destroy();
+
+              jQuery.each(projection.operand_subscriptions, function() {
+                expect(this.destroy).to(have_been_called);
+              });
+              expect(projection.operand_subscriptions).to(be_empty);
+            });
+          });
+
+          context("when it is not the last subscription to be destroyed", function() {
+            before(function() {
+              projection.on_remove(function() {});
+            });
+
+            it("does not destroy the #on_insert and #on_update subscriptions on #operand", function() {
+              expect(projection.operand_subscriptions).to_not(be_empty);
+              jQuery.each(projection.operand_subscriptions, function() {
+                mock(this, 'destroy');
+              });
+
+              subscription.destroy();
+
+              jQuery.each(projection.operand_subscriptions, function() {
+                expect(this.destroy).to_not(have_been_called);
+              });
+              expect(projection.operand_subscriptions).to_not(be_empty);
+            });
+          });
+        });
+      });
+
+      describe("#on_update subscriptions", function() {
+        describe("when an #on_update subscription is registered", function() {
+          context("when this is the first subscription", function() {
+            before(function() {
+              expect(projection.has_subscribers()).to(be_false);
+            });
+
+            it("subscribes #on_insert, #on_remove, and #on_update on #operand", function() {
+              mock(operand, 'on_insert');
+              mock(operand, 'on_remove');
+              mock(operand, 'on_update');
+
+              projection.on_update(function() {});
+
+              expect(operand.on_insert).to(have_been_called);
+              expect(operand.on_remove).to(have_been_called);
+              expect(operand.on_update).to(have_been_called);
+            });
+          });
+
+          context("when this is not the first subscription", function() {
+            before(function() {
+              projection.on_update(function() {});
+            });
+
+            it("does not subscribe to #operand", function() {
+              mock(operand, 'on_insert');
+              mock(operand, 'on_remove');
+              mock(operand, 'on_update');
+
+              projection.on_update(function() {});
+
+              expect(operand.on_insert).to_not(have_been_called);
+              expect(operand.on_remove).to_not(have_been_called);
+              expect(operand.on_update).to_not(have_been_called);
+            });
+          });
+        });
+
+        describe("when an #on_update subscription is destroyed", function() {
+          var subscription;
+          before(function() {
+            subscription = projection.on_update(function() {});
+          });
+
+          context("when it is the last subscription to be destroyed", function() {
+            it("destroys the #on_insert and #on_update subscriptions on #operand", function() {
+              expect(projection.operand_subscriptions).to_not(be_empty);
+              jQuery.each(projection.operand_subscriptions, function() {
+                mock(this, 'destroy');
+              });
+
+              subscription.destroy();
+
+              jQuery.each(projection.operand_subscriptions, function() {
+                expect(this.destroy).to(have_been_called);
+              });
+              expect(projection.operand_subscriptions).to(be_empty);
+            });
+          });
+
+          context("when it is not the last subscription to be destroyed", function() {
+            before(function() {
+              projection.on_update(function() {});
+            });
+
+            it("does not destroy the #on_insert and #on_update subscriptions on #operand", function() {
+              expect(projection.operand_subscriptions).to_not(be_empty);
+              jQuery.each(projection.operand_subscriptions, function() {
+                mock(this, 'destroy');
+              });
+
+              subscription.destroy();
+
+              jQuery.each(projection.operand_subscriptions, function() {
+                expect(this.destroy).to_not(have_been_called);
+              });
+              expect(projection.operand_subscriptions).to_not(be_empty);
+            });
+          });
+        });
+      });
+    });
   });
 }});
