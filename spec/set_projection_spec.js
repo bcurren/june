@@ -184,7 +184,7 @@ Screw.Unit(function(c) { with(c) {
           it("triggers #on_update handlers with the projected tuple", function() {
             tuple.first_name("robérto");
             expect(update_handler).to(have_been_called, once);
-            expect(update_handler).to(have_been_called, with_args(tuple));
+            expect(update_handler).to(have_been_called, with_args(tuple, null));
           });
 
           it("does not modify #tuples", function() {
