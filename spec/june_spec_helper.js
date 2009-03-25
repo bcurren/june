@@ -6,6 +6,8 @@ require("/june/subscription_node");
 require("/june/subscription");
 require("/june/relation_methods");
 require("/june/subscriber_methods");
+require("/june/subscribable");
+require("/june/tuple_supervisor");
 require("/june/tuple_methods");
 require("/june/set");
 require("/june/inner_join");
