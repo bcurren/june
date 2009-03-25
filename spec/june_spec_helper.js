@@ -5,6 +5,7 @@ require("/june/string");
 require("/june/subscription_node");
 require("/june/subscription");
 require("/june/relation_methods");
+require("/june/subscriber_methods");
 require("/june/tuple_methods");
 require("/june/set");
 require("/june/inner_join");
