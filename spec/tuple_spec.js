@@ -134,6 +134,27 @@ Screw.Unit(function(c) { with(c) {
         expect(tuple.first_name()).to(equal, "Bobo");
         expect(tuple.age()).to(equal, 100);
       });
+
+      it("calls #tuple_updated on the tuple's #set once with all changed attributes", function() {
+        mock(tuple.set, 'tuple_updated');
+        var attributes = { first_name: "Bobo", age: 100 };
+        var expected_changed_attributes = {
+          first_name: {
+            attribute: tuple.set.first_name,
+            old_value: tuple.first_name(),
+            new_value: attributes['first_name']
+          },
+          age: {
+            attribute: tuple.set.age,
+            old_value: tuple.age(),
+            new_value: attributes['age']
+          }
+        }
+        tuple.update(attributes);
+
+        expect(tuple.set.tuple_updated).to(have_been_called, once);
+        expect(tuple.set.tuple_updated).to(have_been_called, with_args(tuple, expected_changed_attributes));
+      });
     });
   });
 }});
