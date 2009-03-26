@@ -18,43 +18,32 @@ Screw.Unit(function(c) { with(c) {
     });
 
     describe("#update", function() {
-      context("when the snapshot contains a tuple that is not in the Domain", function() {
-        var snapshot;
-        before(function() {
-          snapshot = {
-            "User": {
-              "bill": {
-                id: "bill",
-                first_name: "Bill",
-                age: 53,
-                dob: 1238022403679
-              }
+      it("calls #update on every Set indicated by the given snapshot with its corresponding snapshot fragment", function() {
+        var snapshot = {
+          'User': {
+            'bob': {
+              first_name: "Babak"
             }
-          };
-          expect(User.find("bill")).to(be_null);
-        });
+          },
 
-        it("inserts the new tuples into the appropriate Sets", function() {
-          FixtureDomain.update(snapshot);
-          var user = User.find("bill");
-          expect(user).to_not(be_null);
-          expect(user.id()).to(equal, "bill");
-          expect(user.first_name()).to(equal, "Bill");
-          expect(user.age()).to(equal, 53);
-          expect(user.dob()).to(equal, new Date(1238022403679));
-        });
-      });
+          Pet: {
+            'blue': {
+              name: "Red"
+            }
+          }
+        }
 
-      context("when the snapshot does not contain tuples that are in the Domain", function() {
-      });
+        mock(User, 'update');
+        mock(Pet, 'update');
+        mock(Species, 'update');
 
-      context("when the snapshot contains a tuple that is in the Domain", function() {
-        context("when the tuple has the same Attribute values", function() {
+        FixtureDomain.update(snapshot);
 
-        });
-        context("when the tuple has a different Attribute value", function() {
-
-        });
+        expect(User.update).to(have_been_called, once);
+        expect(User.update).to(have_been_called, with_args(snapshot['User']));
+        expect(Pet.update).to(have_been_called, once);
+        expect(Pet.update).to(have_been_called, with_args(snapshot['Pet']));
+        expect(Species.update).to_not(have_been_called);
       });
     });
   });
