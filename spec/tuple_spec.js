@@ -137,7 +137,7 @@ Screw.Unit(function(c) { with(c) {
 
       it("calls #tuple_updated on the tuple's #set once with all changed attributes", function() {
         mock(tuple.set, 'tuple_updated');
-        var attributes = { first_name: "Bobo", age: 100 };
+        var attributes = { first_name: "Bobo", age: 99 };
         var expected_changed_attributes = {
           first_name: {
             attribute: tuple.set.first_name,
