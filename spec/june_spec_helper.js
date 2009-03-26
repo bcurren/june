@@ -9,6 +9,7 @@ require("/june/subscriber_methods");
 require("/june/subscribable");
 require("/june/tuple_supervisor");
 require("/june/tuple_methods");
+require("/june/domain");
 require("/june/set");
 require("/june/inner_join");
 require("/june/selection");
@@ -23,7 +24,10 @@ require("/june/predicates/not_equal_to");
 
 Screw.Unit(function(c) { with(c) {
   before(function() {
-    User = new June.Set(function(configuration) {
+    FixtureDomain = new June.Domain();
+
+
+    FixtureDomain.define_set("User", function(configuration) {
       with(configuration) {
         global_name("User");
 
@@ -56,8 +60,9 @@ Screw.Unit(function(c) { with(c) {
         });
       }
     });
+    User = FixtureDomain.User;
 
-    Pet = new June.Set(function(configuration) {
+    FixtureDomain.define_set("Pet", function(configuration) {
       with(configuration) {
         global_name("Pet");
 
@@ -73,8 +78,9 @@ Screw.Unit(function(c) { with(c) {
         belongs_to("owner_2", {target_set_name: "User", foreign_key_name: "owner_id"});
       }
     });
+    Pet = FixtureDomain.Pet;
 
-    Species = new June.Set(function(configuration) {
+    FixtureDomain.define_set("Species", function(configuration) {
       with(configuration) {
         global_name("Species");
 
@@ -87,6 +93,7 @@ Screw.Unit(function(c) { with(c) {
         has_one("pet");
       }
     });
+    Species = FixtureDomain.Species;
 
     User.create({id: "dan", first_name: "Dan", age: 21});
     User.create({id: "bob", first_name: "Bob", age: 21});
@@ -105,6 +112,7 @@ Screw.Unit(function(c) { with(c) {
 
 
   after(function() {
+    FixtureDomain = undefined;
     User = undefined;
     Pet = undefined;
     Species = undefined;

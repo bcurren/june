@@ -123,5 +123,17 @@ Screw.Unit(function(c) { with(c) {
         });
       });
     });
+
+    describe("#update", function() {
+      it("updates multiple Attribute values simultaneously", function() {
+        expect(tuple.first_name()).to_not(equal, "Bobo");
+        expect(tuple.age()).to_not(equal, 100);
+
+        tuple.update({ first_name: "Bobo", age: 100 });
+        
+        expect(tuple.first_name()).to(equal, "Bobo");
+        expect(tuple.age()).to(equal, 100);
+      });
+    });
   });
 }});
