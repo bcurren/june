@@ -338,9 +338,14 @@ Screw.Unit(function(c) {
 
         });
 
-        context("when the snapshot contains a tuple that is in the Domain", function() {
+        context("when the snapshot contains a tuple that is in the Set", function() {
           context("when the tuple has the same Attribute values", function() {
-            // TODO: assert that no events get fired for the non-updated tuple
+            it("does not fire #on_update handlers registered on the Set", function() {
+              var update_handler = mock_function("update handler");
+              User.on_update(update_handler);
+              User.update(snapshot_fragment);
+              expect(update_handler).to_not(have_been_called);
+            });
           });
 
           context("when the tuple has different Attribute values", function() {
@@ -358,6 +363,21 @@ Screw.Unit(function(c) {
 
               expect(tuple.age()).to(equal, 999);
               expect(tuple.first_name()).to(equal, "Babak");
+            });
+
+            it("fires all #on_update handlers registered on the Set only after all tuples have been updated", function() {
+              snapshot_fragment['dan']['age'] = 888;
+
+              var update_handler = mock_function("update handler", function() {
+                expect(User.find('bob').age()).to(equal, snapshot_fragment['bob']['age']);
+                expect(User.find('bob').first_name()).to(equal, snapshot_fragment['bob']['first_name']);
+                expect(User.find('dan').age()).to(equal, snapshot_fragment['dan']['age']);
+              });
+              User.on_update(update_handler);
+
+              User.update(snapshot_fragment);
+
+              expect(update_handler).to(have_been_called, twice);
             });
           });
         });

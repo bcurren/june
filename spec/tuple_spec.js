@@ -134,35 +134,45 @@ Screw.Unit(function(c) { with(c) {
     });
 
     describe("#update", function() {
-      it("updates multiple Attribute values simultaneously", function() {
-        expect(tuple.first_name()).to_not(equal, "Bobo");
-        expect(tuple.age()).to_not(equal, 100);
+      context("when called with Attribute values that are different from the existing values", function() {
+        it("updates multiple Attribute values simultaneously", function() {
+          expect(tuple.first_name()).to_not(equal, "Bobo");
+          expect(tuple.age()).to_not(equal, 100);
 
-        tuple.update({ first_name: "Bobo", age: 100 });
-        
-        expect(tuple.first_name()).to(equal, "Bobo");
-        expect(tuple.age()).to(equal, 100);
+          tuple.update({ first_name: "Bobo", age: 100 });
+
+          expect(tuple.first_name()).to(equal, "Bobo");
+          expect(tuple.age()).to(equal, 100);
+        });
+
+        it("calls #tuple_updated on the tuple's #set once with all changed attributes", function() {
+          mock(tuple.set, 'tuple_updated');
+          var attributes = { first_name: "Bobo", age: 99 };
+          var expected_changed_attributes = {
+            first_name: {
+              attribute: tuple.set.first_name,
+              old_value: tuple.first_name(),
+              new_value: attributes['first_name']
+            },
+            age: {
+              attribute: tuple.set.age,
+              old_value: tuple.age(),
+              new_value: attributes['age']
+            }
+          }
+          tuple.update(attributes);
+
+          expect(tuple.set.tuple_updated).to(have_been_called, once);
+          expect(tuple.set.tuple_updated).to(have_been_called, with_args(tuple, expected_changed_attributes));
+        });
       });
 
-      it("calls #tuple_updated on the tuple's #set once with all changed attributes", function() {
-        mock(tuple.set, 'tuple_updated');
-        var attributes = { first_name: "Bobo", age: 99 };
-        var expected_changed_attributes = {
-          first_name: {
-            attribute: tuple.set.first_name,
-            old_value: tuple.first_name(),
-            new_value: attributes['first_name']
-          },
-          age: {
-            attribute: tuple.set.age,
-            old_value: tuple.age(),
-            new_value: attributes['age']
-          }
-        }
-        tuple.update(attributes);
-
-        expect(tuple.set.tuple_updated).to(have_been_called, once);
-        expect(tuple.set.tuple_updated).to(have_been_called, with_args(tuple, expected_changed_attributes));
+      context("when called with Attribute values that are the same as the existing values", function() {
+        it("does not call #tuple_updated on its #set", function() {
+          mock(tuple.set, "tuple_updated");
+          tuple.update({ first_name: tuple.first_name(), age: tuple.age() });
+          expect(tuple.set.tuple_updated).to_not(have_been_called);
+        });
       });
     });
   });
