@@ -18,11 +18,18 @@ Screw.Unit(function(c) { with(c) {
     });
 
     describe("#update", function() {
-      it("calls #update on every Set indicated by the given snapshot with its corresponding snapshot fragment", function() {
-        var snapshot = {
-          'User': {
+      var snapshot;
+      before(function() {
+        snapshot = {
+          User: {
             'bob': {
               first_name: "Babak"
+            },
+
+            'ari': {
+              id: "ari",
+              first_name: "Ari",
+              age: 29
             }
           },
 
@@ -31,8 +38,10 @@ Screw.Unit(function(c) { with(c) {
               name: "Red"
             }
           }
-        }
+        };
+      });
 
+      it("calls #update on every Set indicated by the given snapshot with its corresponding snapshot fragment", function() {
         mock(User, 'update');
         mock(Pet, 'update');
         mock(Species, 'update');
@@ -44,6 +53,33 @@ Screw.Unit(function(c) { with(c) {
         expect(Pet.update).to(have_been_called, once);
         expect(Pet.update).to(have_been_called, with_args(snapshot['Pet']));
         expect(Species.update).to_not(have_been_called);
+      });
+
+      it("inserts, removes, and updates tuples in every Set before firing any event handlers", function() {
+        function assert_all_data_changes_have_been_applied() {
+          expect(User.find("dan")).to(be_null);
+          expect(User.find("ari")).to_not(be_undefined);
+          expect(User.find("bob").first_name()).to(equal, "Babak");
+          expect(Pet.find("blue").name()).to(equal, "Red");
+        }
+
+        User.on_update(function() {
+          assert_all_data_changes_have_been_applied();
+        });
+
+        User.on_insert(function() {
+          assert_all_data_changes_have_been_applied();
+        });
+        
+        User.on_remove(function() {
+          assert_all_data_changes_have_been_applied();
+        });
+
+        Pet.on_update(function() {
+          assert_all_data_changes_have_been_applied();
+        });
+        
+        FixtureDomain.update(snapshot);
       });
     });
   });
