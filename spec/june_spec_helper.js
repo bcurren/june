@@ -26,7 +26,6 @@ Screw.Unit(function(c) { with(c) {
   before(function() {
     FixtureDomain = new June.Domain();
 
-
     FixtureDomain.define_set("User", function(configuration) {
       with(configuration) {
         global_name("User");

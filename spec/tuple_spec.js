@@ -6,6 +6,15 @@ Screw.Unit(function(c) { with(c) {
     before(function() {
       tuple = User.find("bob");
     });
+
+    describe("#destroy", function() {
+      it("calls #remove on the tuple's #set with the tuple", function() {
+        mock(User, 'remove');
+        tuple.destroy();
+        expect(User.remove).to(have_been_called, once);
+        expect(User.remove).to(have_been_called, with_args(tuple));
+      });
+    });
     
     describe("#get_field_value", function() {
       describe("when called with an Attribute that is defined on the Set", function() {

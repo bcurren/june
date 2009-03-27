@@ -16,8 +16,7 @@ Screw.Unit(function(c) { with(c) {
     
     describe("#unsubscribe", function() {
       it("causes the given Subscription's #handler to no longer be triggered by #publish", function() {
-        var handler = mock_function();
-        handler.function_name = "subscription handler";
+        var handler = mock_function("subscription handler");
 
         var subscription = node.subscribe(handler);
 
@@ -31,8 +30,7 @@ Screw.Unit(function(c) { with(c) {
       });
 
       it("triggers handlers registered with #on_unsubscribe with the unsubscribed Subscription", function() {
-        var handler = mock_function();
-        handler.function_name = "unsubscribe handler";
+        var handler = mock_function("unsubscribe handler");
 
         node.on_unsubscribe(handler);
 

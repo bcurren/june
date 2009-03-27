@@ -182,8 +182,7 @@ Screw.Unit(function(c) {
       describe("#create", function() {
         var tuple, update_handler;
         before(function() {
-          update_handler = mock_function();
-          update_handler.function_name = "update handler";
+          update_handler = mock_function("update handler");
           User.on_update(update_handler);
 
           tuple = User.create({
@@ -278,6 +277,28 @@ Screw.Unit(function(c) {
             expect(user.age()).to(equal, 53);
             expect(user.dob()).to(equal, new Date(1238022403679));
           });
+
+          it("fires all #on_insert handlers registered on the Set only after all new tuples have been inserted", function() {
+            snapshot_fragment["kunal"] = {
+              id: "kunal",
+              first_name: "Kunal",
+              age: 40,
+              dob: 1238022403449
+            };
+
+            expect(User.find("bill")).to(be_null);
+            expect(User.find("kunal")).to(be_null);
+
+            var insert_handler = mock_function("insert handler", function() {
+              expect(User.find("bill")).to_not(be_null);
+              expect(User.find("kunal")).to_not(be_null);
+            });
+            User.on_insert(insert_handler);
+
+            User.update(snapshot_fragment);
+
+            expect(insert_handler).to(have_been_called, twice);
+          });
         });
 
         context("when the snapshot_fragment does not contain a tuple that is in the Set", function() {
@@ -287,8 +308,6 @@ Screw.Unit(function(c) {
 
           it("removes that tuple from the Set", function(){
             expect(User.find("bob")).to_not(be_null);
-            console.debug(snapshot_fragment);
-            
             User.update(snapshot_fragment);
             expect(User.find("bob")).to(be_null);
           });
@@ -316,6 +335,46 @@ Screw.Unit(function(c) {
               expect(tuple.first_name()).to(equal, "Babak");
             });
           });
+        });
+      });
+
+      describe("#pause_events and #resume_events", function() {
+        specify("#pause_events delays #on_insert, #on_remove, and #on_update triggers until #resume_events is called, and then events are flushed and no longer delay", function() {
+          var insert_handler = mock_function("insert handler");
+          var update_handler = mock_function("update handler");
+          var remove_handler = mock_function("remove handler");
+
+          User.on_insert(insert_handler);
+          User.on_update(update_handler);
+          User.on_remove(remove_handler);
+
+          User.pause_events();
+
+          var tuple = User.create({id: "kunal", first_name: "Kunal"});
+          tuple.first_name("Lanuk");
+          tuple.destroy();
+
+          expect(insert_handler).to_not(have_been_called);
+          expect(update_handler).to_not(have_been_called);
+          expect(remove_handler).to_not(have_been_called);
+
+          User.resume_events();
+
+          expect(insert_handler).to(have_been_called, with_args(tuple));
+          expect(update_handler).to(have_been_called, with_args(tuple, {
+            first_name: {
+              attribute: User.first_name,
+              old_value: "Kunal",
+              new_value: "Lanuk"
+            }
+          }));
+          expect(remove_handler).to(have_been_called, with_args(tuple));
+
+          insert_handler.clear();
+          var tuple_2 = User.create({id: "nathan", first_name: "Nathan"});
+
+          expect(insert_handler).to(have_been_called, once);
+          expect(insert_handler).to(have_been_called, with_args(tuple_2));
         });
       });
 
@@ -378,8 +437,7 @@ Screw.Unit(function(c) {
       describe("event handling", function() {
         describe("when a tuple is inserted into the Set", function() {
           it("triggers #on_insert handlers with the inserted tuple", function() {
-            var insert_handler = mock_function();
-            insert_handler.function_name = "insert handler";
+            var insert_handler = mock_function("insert handler");
             User.on_insert(insert_handler);
 
             var tuple = User.create({id: "emma", first_name: "Emma"});
@@ -390,8 +448,7 @@ Screw.Unit(function(c) {
 
         describe("when a tuple in the Set is removed", function() {
           it("triggers #on_remove handlers with the removed tuple", function() {
-            var remove_handler = mock_function();
-            remove_handler.function_name = "remove handler";
+            var remove_handler = mock_function("remove handler");
             User.on_remove(remove_handler);
 
             var tuple = User.find("bob");
@@ -404,8 +461,7 @@ Screw.Unit(function(c) {
 
         describe("when a tuple in the Set is updated", function() {
           it("triggers #on_update handlers with the updated tuple and a changed attributes object", function() {
-            var update_handler = mock_function();
-            update_handler.function_name = "update handler";
+            var update_handler = mock_function("update handler");
             User.on_update(update_handler);
 
             var tuple = User.find("bob");

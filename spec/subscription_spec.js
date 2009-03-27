@@ -5,8 +5,7 @@ Screw.Unit(function(c) { with(c) {
     var node, handler, subscription;
     before(function() {
       node = new June.SubscriptionNode();
-      handler = mock_function();
-      handler.function_name = "subscription handler";
+      handler = mock_function("subscription handler");
       subscription = new June.Subscription(node, handler);
     });
 

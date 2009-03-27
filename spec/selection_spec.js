@@ -80,16 +80,13 @@ Screw.Unit(function(c) { with(c) {
     describe("event handling", function() {
       var insert_handler, remove_handler, update_handler, tuple;
       before(function() {
-        insert_handler = mock_function();
-        insert_handler.function_name = "insert handler";
+        insert_handler = mock_function("insert handler");
         selection.on_insert(insert_handler);
 
-        remove_handler = mock_function();
-        remove_handler.function_name = "remove handler";
+        remove_handler = mock_function("remove handler");
         selection.on_remove(remove_handler);
 
-        update_handler = mock_function();
-        update_handler.function_name = "update handler";
+        update_handler = mock_function("update handler");
         selection.on_update(update_handler);
       });
 
