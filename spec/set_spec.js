@@ -163,6 +163,13 @@ Screw.Unit(function(c) {
         });
       });
 
+      describe("#tuples", function() {
+        it("returns a copy of the sets tuples", function() {
+          var tuples_copy = User.tuples();
+          tuples_copy.push(1);
+          expect(User.tuples()).to_not(equal, tuples_copy);
+        });
+      });
 
       describe("#find", function() {
         describe("when passed the id of a tuple in the Set", function() {
@@ -311,6 +318,24 @@ Screw.Unit(function(c) {
             User.update(snapshot_fragment);
             expect(User.find("bob")).to(be_null);
           });
+
+          it("fires all #on_remove handlers registered on the Set only after all tuples have been removed", function() {
+            delete snapshot_fragment["dan"];
+
+            expect(User.find("bob")).to_not(be_null);
+            expect(User.find("dan")).to_not(be_null);
+
+            var remove_handler = mock_function("remove handler", function() {
+              expect(User.find("dan")).to(be_null);
+              expect(User.find("bob")).to(be_null);
+            });
+            User.on_remove(remove_handler);
+
+            User.update(snapshot_fragment);
+
+            expect(remove_handler).to(have_been_called, twice);
+          });
+
         });
 
         context("when the snapshot contains a tuple that is in the Domain", function() {
