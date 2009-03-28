@@ -81,6 +81,25 @@ Screw.Unit(function(c) { with(c) {
         
         FixtureDomain.update(snapshot);
       });
+
+      context("when called with a function as its second argument", function() {
+        it("calls the function before firing event handlers", function() {
+          var insert_handler = mock_function("insert handler");
+          var remove_handler = mock_function("remove handler");
+          var update_handler = mock_function("update handler");
+
+          var update_callback = mock_function("update callback", function() {
+            expect(insert_handler).to_not(have_been_called);
+            expect(remove_handler).to_not(have_been_called);
+            expect(update_handler).to_not(have_been_called);
+          });
+
+          FixtureDomain.update(snapshot, update_callback);
+
+          expect(update_callback).to(have_been_called, once);
+        });
+
+      });
     });
   });
 }});

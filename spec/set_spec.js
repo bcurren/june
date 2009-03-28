@@ -284,28 +284,6 @@ Screw.Unit(function(c) {
             expect(user.age()).to(equal, 53);
             expect(user.dob()).to(equal, new Date(1238022403679));
           });
-
-          it("fires all #on_insert handlers registered on the Set only after all new tuples have been inserted", function() {
-            snapshot_fragment["kunal"] = {
-              id: "kunal",
-              first_name: "Kunal",
-              age: 40,
-              dob: 1238022403449
-            };
-
-            expect(User.find("bill")).to(be_null);
-            expect(User.find("kunal")).to(be_null);
-
-            var insert_handler = mock_function("insert handler", function() {
-              expect(User.find("bill")).to_not(be_null);
-              expect(User.find("kunal")).to_not(be_null);
-            });
-            User.on_insert(insert_handler);
-
-            User.update(snapshot_fragment);
-
-            expect(insert_handler).to(have_been_called, twice);
-          });
         });
 
         context("when the snapshot_fragment does not contain a tuple that is in the Set", function() {
@@ -318,24 +296,6 @@ Screw.Unit(function(c) {
             User.update(snapshot_fragment);
             expect(User.find("bob")).to(be_null);
           });
-
-          it("fires all #on_remove handlers registered on the Set only after all tuples have been removed", function() {
-            delete snapshot_fragment["dan"];
-
-            expect(User.find("bob")).to_not(be_null);
-            expect(User.find("dan")).to_not(be_null);
-
-            var remove_handler = mock_function("remove handler", function() {
-              expect(User.find("dan")).to(be_null);
-              expect(User.find("bob")).to(be_null);
-            });
-            User.on_remove(remove_handler);
-
-            User.update(snapshot_fragment);
-
-            expect(remove_handler).to(have_been_called, twice);
-          });
-
         });
 
         context("when the snapshot contains a tuple that is in the Set", function() {
@@ -363,21 +323,6 @@ Screw.Unit(function(c) {
 
               expect(tuple.age()).to(equal, 999);
               expect(tuple.first_name()).to(equal, "Babak");
-            });
-
-            it("fires all #on_update handlers registered on the Set only after all tuples have been updated", function() {
-              snapshot_fragment['dan']['age'] = 888;
-
-              var update_handler = mock_function("update handler", function() {
-                expect(User.find('bob').age()).to(equal, snapshot_fragment['bob']['age']);
-                expect(User.find('bob').first_name()).to(equal, snapshot_fragment['bob']['first_name']);
-                expect(User.find('dan').age()).to(equal, snapshot_fragment['dan']['age']);
-              });
-              User.on_update(update_handler);
-
-              User.update(snapshot_fragment);
-
-              expect(update_handler).to(have_been_called, twice);
             });
           });
         });
