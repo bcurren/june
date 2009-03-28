@@ -27,6 +27,10 @@ Screw.Unit(function(c) { with(c) {
       it("assigns the defined Set to a global name on window", function() {
         expect(Foo).to(equal, domain.Foo);
       });
+
+      it("sets #global_name on the defined Set to the given name", function() {
+        expect(domain.Foo.global_name).to(equal, "Foo");
+      });
     });
 
     describe("#update", function() {

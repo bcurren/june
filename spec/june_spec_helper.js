@@ -26,73 +26,58 @@ Screw.Unit(function(c) { with(c) {
   before(function() {
     FixtureDomain = new June.Domain();
 
-    FixtureDomain.define_set("User", function(configuration) {
-      with(configuration) {
-        global_name("User");
+    FixtureDomain.define_set("User", function(c) { with(c) {
+      attributes({
+        'id': 'string',
+        'first_name': 'string',
+        'age': 'integer',
+        'dob': 'datetime'
+      });
 
-        attributes({
-          'id': 'string',
-          'first_name': 'string',
-          'age': 'integer',
-          'dob': 'datetime'
-        });
+      relates_to_many("pets", function() {
+        return Pet.where(Pet.owner_id.eq(this.id()));
+      });
 
-        relates_to_many("pets", function() {
-          return Pet.where(Pet.owner_id.eq(this.id()));
-        });
+      has_many("pets_2", {target_set_name: "Pet", foreign_key_name: "owner_id"});
+      has_one("pet_2", {target_set_name: "Pet", foreign_key_name: "owner_id"});
 
-        has_many("pets_2", {target_set_name: "Pet", foreign_key_name: "owner_id"});
-        has_one("pet_2", {target_set_name: "Pet", foreign_key_name: "owner_id"});
+      relates_to_one("pet", function() {
+        return this.pets_relation;
+      }),
 
-        relates_to_one("pet", function() {
-          return this.pets_relation;
-        }),
+      methods({
+        foo: function() {
+          return "foo";
+        },
 
-        methods({
-          foo: function() {
-            return "foo";
-          },
+        bar: function() {
+          return "bar";
+        }
+      });
+    }});
 
-          bar: function() {
-            return "bar";
-          }
-        });
-      }
-    });
-    User = FixtureDomain.User;
+    FixtureDomain.define_set("Pet", function(c) { with(c) {
+      attributes({
+        'id': 'string',
+        'name': 'string',
+        'owner_id': 'string',
+        'species_id': 'string'
+      });
 
-    FixtureDomain.define_set("Pet", function(configuration) {
-      with(configuration) {
-        global_name("Pet");
+      belongs_to("species");
+      belongs_to("owner", {target_set_name: "User"});
+      belongs_to("owner_2", {target_set_name: "User", foreign_key_name: "owner_id"});
+    }});
 
-        attributes({
-          'id': 'string',
-          'name': 'string',
-          'owner_id': 'string',
-          'species_id': 'string'
-        });
+    FixtureDomain.define_set("Species", function(c) { with(c) {
+      attributes({
+        'id': 'string',
+        'name': 'string'
+      });
 
-        belongs_to("species");
-        belongs_to("owner", {target_set_name: "User"});
-        belongs_to("owner_2", {target_set_name: "User", foreign_key_name: "owner_id"});
-      }
-    });
-    Pet = FixtureDomain.Pet;
-
-    FixtureDomain.define_set("Species", function(configuration) {
-      with(configuration) {
-        global_name("Species");
-
-        attributes({
-          'id': 'string',
-          'name': 'string'
-        });
-
-        has_many("pets");
-        has_one("pet");
-      }
-    });
-    Species = FixtureDomain.Species;
+      has_many("pets");
+      has_one("pet");
+    }});
 
     User.create({id: "dan", first_name: "Dan", age: 21});
     User.create({id: "bob", first_name: "Bob", age: 21});
