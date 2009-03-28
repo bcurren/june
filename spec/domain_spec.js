@@ -3,17 +3,29 @@ require("/specs/june_spec_helper");
 Screw.Unit(function(c) { with(c) {
   describe("Domain", function() {
     describe("#define_set", function() {
-      it("instantiates a June.Set and assigns it to the given name on the Domain", function() {
-        var domain = new June.Domain();
+      var domain;
+
+      before(function() {
+        domain = new June.Domain();
         domain.define_set("Foo", function(c) { with(c) {
           attributes({
             bar: "string",
             baz: "string"
           });
         }});
-        
+      });
+
+      after(function() {
+        delete window['Foo'];
+      });
+
+      it("instantiates a June.Set and assigns it to the given name on the Domain", function() {
         expect(domain.Foo.constructor).to(equal, June.Set);
         expect(domain.Foo.bar.constructor).to(equal, June.Attribute);
+      });
+
+      it("assigns the defined Set to a global name on window", function() {
+        expect(Foo).to(equal, domain.Foo);
       });
     });
 
@@ -98,7 +110,6 @@ Screw.Unit(function(c) { with(c) {
 
           expect(update_callback).to(have_been_called, once);
         });
-
       });
     });
   });
