@@ -1,26 +1,26 @@
 //require("/vendor/jquery-1.2.6");
 require("/vendor/foundation");
-require("/june");
-require("/june/string");
-require("/june/subscription_node");
-require("/june/subscription");
-require("/june/relation_methods");
-require("/june/subscriber_methods");
-require("/june/subscribable");
-require("/june/tuple_supervisor");
-require("/june/tuple_methods");
-require("/june/domain");
-require("/june/set");
-require("/june/inner_join");
-require("/june/selection");
-require("/june/composite_tuple");
-require("/june/set_configuration");
-require("/june/attribute");
-require("/june/field");
-require("/june/set_projection");
-require("/june/predicates/predicate_methods");
-require("/june/predicates/equal_to");
-require("/june/predicates/not_equal_to");
+require("/lib/june");
+require("/lib/june/string");
+require("/lib/june/subscription_node");
+require("/lib/june/subscription");
+require("/lib/june/subscriber_methods");
+require("/lib/june/subscribable");
+require("/lib/june/tuple_supervisor");
+require("/lib/june/tuple_methods");
+require("/lib/june/domain");
+require("/lib/june/relations/relation_methods");
+require("/lib/june/relations/set");
+require("/lib/june/relations/set_configuration");
+require("/lib/june/relations/selection");
+require("/lib/june/relations/inner_join");
+require("/lib/june/relations/set_projection");
+require("/lib/june/composite_tuple");
+require("/lib/june/attribute");
+require("/lib/june/field");
+require("/lib/june/predicates/predicate_methods");
+require("/lib/june/predicates/equal_to");
+require("/lib/june/predicates/not_equal_to");
 
 Screw.Unit(function(c) { with(c) {
   before(function() {
