@@ -3,7 +3,6 @@ Legend:
 * == Done
 
 TODO:
+[ ] make global name on sets underscored and plural for consistency with server side
 [ ] integrate into mmol
 [ ] performance testing
-[ ] domain object / global domain
-[ ] remote repository proxy
