@@ -62,7 +62,7 @@ Screw.Unit(function(c) { with(c) {
         mock(Pet, 'update');
         mock(Species, 'update');
 
-        FixtureDomain.update(snapshot);
+        June.GlobalDomain.update(snapshot);
 
         expect(User.update).to(have_been_called, once);
         expect(User.update).to(have_been_called, with_args(snapshot['User']));
@@ -95,7 +95,7 @@ Screw.Unit(function(c) { with(c) {
           assert_all_data_changes_have_been_applied();
         });
         
-        FixtureDomain.update(snapshot);
+        June.GlobalDomain.update(snapshot);
       });
 
       context("when called with a function as its second argument", function() {
@@ -110,7 +110,7 @@ Screw.Unit(function(c) { with(c) {
             expect(update_handler).to_not(have_been_called);
           });
 
-          FixtureDomain.update(snapshot, update_callback);
+          June.GlobalDomain.update(snapshot, update_callback);
 
           expect(update_callback).to(have_been_called, once);
         });

@@ -2,7 +2,6 @@
 require("/vendor/foundation");
 require("/vendor/json");
 
-require("/lib/june");
 require("/lib/june/string");
 require("/lib/june/subscription_node");
 require("/lib/june/subscription");
@@ -25,12 +24,11 @@ require("/lib/june/predicates/binary_predicate_methods");
 require("/lib/june/predicates/predicate_methods");
 require("/lib/june/predicates/equal_to");
 require("/lib/june/predicates/not_equal_to");
+require("/lib/june");
 
 Screw.Unit(function(c) { with(c) {
   before(function() {
-    FixtureDomain = new June.Domain();
-
-    FixtureDomain.define_set("User", function(c) { with(c) {
+    June.define_set("User", function(c) { with(c) {
       attributes({
         'id': 'string',
         'first_name': 'string',
@@ -60,7 +58,7 @@ Screw.Unit(function(c) { with(c) {
       });
     }});
 
-    FixtureDomain.define_set("Pet", function(c) { with(c) {
+    June.define_set("Pet", function(c) { with(c) {
       attributes({
         'id': 'string',
         'name': 'string',
@@ -73,7 +71,7 @@ Screw.Unit(function(c) { with(c) {
       belongs_to("owner_2", {target_set_name: "User", foreign_key_name: "owner_id"});
     }});
 
-    FixtureDomain.define_set("Species", function(c) { with(c) {
+    June.define_set("Species", function(c) { with(c) {
       attributes({
         'id': 'string',
         'name': 'string'
@@ -100,7 +98,7 @@ Screw.Unit(function(c) { with(c) {
 
 
   after(function() {
-    FixtureDomain = undefined;
+    June.GlobalDomain = new June.Domain();
     User = undefined;
     Pet = undefined;
     Species = undefined;
