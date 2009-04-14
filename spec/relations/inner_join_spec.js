@@ -21,6 +21,35 @@ Screw.Unit(function(c) { with(c) {
       });
     });
 
+    describe("#wire_representation", function() {
+      it("returns the JSON representation of the InnerJoin", function() {
+        expect(join.wire_representation()).to(equal, {
+          type: "inner_join",
+          left_operand: {
+            type: "set",
+            name: "users"
+          },
+          right_operand: {
+            type: "set",
+            name: "pets"
+          },
+          predicate: {
+            type: "eq",
+            left_operand: {
+              type: "attribute",
+              set: "users",
+              name: "id"
+            },
+            right_operand: {
+              type: "attribute",
+              set: "pets",
+              name: "owner_id"
+            }
+          }
+        });
+      });
+    });
+
     // TODO: test contains
     // TODO: test has_subscribers
     // TODO: test subscription propagation

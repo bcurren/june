@@ -27,6 +27,30 @@ Screw.Unit(function(c) { with(c) {
       });
     });
 
+    describe("#wire_representation", function() {
+      it("returns the JSON representation of the Selection", function() {
+        expect(selection.wire_representation()).to(equal, {
+          type: "selection",
+          operand: {
+            type: "set",
+            name: "users"
+          },
+          predicate: {
+            type: "eq",
+            left_operand: {
+              type: "attribute",
+              set: "users",
+              name: "age"
+            },
+            right_operand: {
+              type: "scalar",
+              value: 21
+            }
+          }
+        });
+      });
+    });
+
     describe("#on_insert", function() {
       it("returns a Subscription with #on_insert_node as its #node", function() {
         var subscription = selection.on_insert(function() {});

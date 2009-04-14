@@ -5,7 +5,7 @@ Screw.Unit(function(c) { with(c) {
     var projection, operand, projected_set;
 
     before(function() {
-      operand = User.join(Pet).on(Pet.owner_id.eq(User.id));
+      operand = User.join(Pet).on(User.id.eq(Pet.owner_id));
       projected_set = Pet;
       projection = new June.Relations.SetProjection(operand, projected_set);
     });
@@ -18,6 +18,40 @@ Screw.Unit(function(c) { with(c) {
 
         expect(tuples).to(equal, expected_tuples);
       });
+    });
+
+    describe("#wire_representation", function() {
+      it("returns the JSON representation of the SetProjection", function() {
+        expect(projection.wire_representation()).to(equal, {
+          type: "set_projection",
+          operand: {
+            type: "inner_join",
+            left_operand: {
+              type: "set",
+              name: "users"
+            },
+            right_operand: {
+              type: "set",
+              name: "pets"
+            },
+            predicate: {
+              type: "eq",
+              left_operand: {
+                type: "attribute",
+                set: "users",
+                name: "id"
+              },
+              right_operand: {
+                type: "attribute",
+                set: "pets",
+                name: "owner_id"
+              }
+            }
+          },
+          projected_set: "pets"
+        });
+      });
+
     });
 
     describe("#on_insert", function() {
