@@ -7,6 +7,26 @@ Screw.Unit(function(c) { with(c) {
       remote = new June.RemoteDomain("/domain");
     });
 
+    describe("#pull", function() {
+      it("calls #update on June.GlobalDomain with the results of #fetch", function() {
+        var snapshot = {
+          "users": {
+            "stephanie": {
+              "id": "stephanie",
+              "first_name": "Stephanie"
+            }
+          }
+        };
+        mock(remote, "fetch", function() {
+          return snapshot;
+        });
+
+        mock(June.GlobalDomain, "update");
+        remote.pull(User);
+        expect(June.GlobalDomain.update).to(have_been_called, with_args(snapshot));
+      });
+    });
+
     describe("#fetch", function() {
       it("sends a GET request to the RemoteDomain's url with a JSON wire representation of the given relations and returns a JSON snapshot of its results", function() {
         var mock_server_response = {
