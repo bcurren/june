@@ -1,10 +1,11 @@
-namespace :screw do
-  task :run do
-    dir = File.dirname(__FILE__)
-    implementation_path = "#{dir}/lib"
-    spec_path = "#{dir}/spec"
-    
-    system("#{dir}/vendor/screw_unit_server/bin/screw_unit_server #{spec_path} #{implementation_path} #{implementation_path}")
-  end
+desc "Package all scripts into june.js"
+task :package do
+  require "sprockets"
+  Dir.mkdir("pkg") unless File.exists?("pkg")
+  secretary = Sprockets::Secretary.new(
+    :asset_root   => "pkg",
+    :load_path    => ["lib/**/*"],
+    :source_files => ["lib/june.js"]
+  )
+  secretary.concatenation.save_to("pkg/june.js")
 end
-  

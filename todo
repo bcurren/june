@@ -3,11 +3,6 @@ Legend:
 * == Done
 
 TODO:
-[*] factor out relation commonalities
-[*] domain object
-[*] merge domain snapshot (our equivalent of execute server commands)
-[ ] implement Domain#make_global which adds all its sets as global names on window and use this in spec helper
-[ ] use name provided in the #define_set api to configure the global name of the created set. this could probably be moved to the Set's constructor params 
 [ ] integrate into mmol
 [ ] performance testing
 [ ] domain object / global domain
