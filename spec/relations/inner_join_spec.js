@@ -1,7 +1,7 @@
 require("/specs/june_spec_helper");
 
 Screw.Unit(function(c) { with(c) {
-  describe("InnerJoin", function() {
+  describe("Relations.InnerJoin", function() {
     var join, left_operand, right_operand, predicate, tuple;
 
     before(function() {
@@ -20,7 +20,6 @@ Screw.Unit(function(c) { with(c) {
         });
       });
     });
-
 
     // TODO: test contains
     // TODO: test has_subscribers

@@ -1,7 +1,7 @@
 require("/specs/june_spec_helper");
 
 Screw.Unit(function(c) { with(c) {
-  describe("SetProjection", function() {
+  describe("Relations.SetProjection", function() {
     var projection, operand, projected_set;
 
     before(function() {

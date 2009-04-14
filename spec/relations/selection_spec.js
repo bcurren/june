@@ -1,7 +1,7 @@
 require("/specs/june_spec_helper");
 
 Screw.Unit(function(c) { with(c) {
-  describe("Selection", function() {
+  describe("Relations.Selection", function() {
     var selection, operand, predicate;
 
     before(function() {
