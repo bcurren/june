@@ -7,7 +7,7 @@ Screw.Unit(function(c) { with(c) {
     before(function() {
       operand = User.join(Pet).on(Pet.owner_id.eq(User.id));
       projected_set = Pet;
-      projection = new June.SetProjection(operand, projected_set);
+      projection = new June.Relations.SetProjection(operand, projected_set);
     });
 
     describe("#tuples", function() {
@@ -74,7 +74,7 @@ Screw.Unit(function(c) { with(c) {
       var insert_handler, remove_handler, update_handler, tuple;
       before(function() {
         projected_set = User;
-        projection = new June.SetProjection(operand, projected_set);
+        projection = new June.Relations.SetProjection(operand, projected_set);
 
         insert_handler = mock_function("insert handler");
         projection.on_insert(insert_handler);

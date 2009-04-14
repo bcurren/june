@@ -7,7 +7,7 @@ Screw.Unit(function(c) { with(c) {
     before(function() {
       operand = User;
       predicate = new June.Predicates.EqualTo(User.age, 21);
-      selection = new June.Selection(operand, predicate);
+      selection = new June.Relations.Selection(operand, predicate);
     });
 
     describe("#tuples", function() {

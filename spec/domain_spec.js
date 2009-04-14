@@ -20,7 +20,7 @@ Screw.Unit(function(c) { with(c) {
       });
 
       it("instantiates a June.Set and assigns it to the given name on the Domain", function() {
-        expect(domain.Foo.constructor).to(equal, June.Set);
+        expect(domain.Foo.constructor).to(equal, June.Relations.Set);
         expect(domain.Foo.bar.constructor).to(equal, June.Attribute);
       });
 
