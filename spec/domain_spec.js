@@ -28,8 +28,8 @@ Screw.Unit(function(c) { with(c) {
         expect(Foo).to(equal, domain.Foo);
       });
 
-      it("sets #global_name on the defined Set to the given name", function() {
-        expect(domain.Foo.global_name).to(equal, "Foo");
+      it("sets #global_name on the defined Set to the underscored and pluralized version of the given name", function() {
+        expect(domain.Foo.global_name).to(equal, "foos");
       });
     });
 

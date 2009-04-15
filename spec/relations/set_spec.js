@@ -8,12 +8,6 @@ Screw.Unit(function(c) { with (c) {
     });
 
     describe("metaprogrammatic declarations", function() {
-      describe(".global_name", function() {
-        it("assigns the name of the Set", function() {
-          expect(User.global_name).to(equal, "User");
-        });
-      });
-
       describe(".attributes", function() {
         it("creates an Attribute object with the given name and type with on the Set for each declared Attribute", function() {
           first_name_attribute = User.first_name
