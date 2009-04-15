@@ -3,7 +3,6 @@ Legend:
 * == Done
 
 TODO:
-[ ] make global name on sets underscored and plural for consistency with server side
 [ ] remove inflector extensions on string prototype and use Inflector.X directly instead in library code
 [ ] integrate into mmol
 [ ] performance testing
