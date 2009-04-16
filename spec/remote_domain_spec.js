@@ -7,6 +7,41 @@ Screw.Unit(function(c) { with(c) {
       remote = new June.RemoteDomain("/domain");
     });
 
+    describe("#update", function() {
+      it("sends a PUT request to the RemoteDomain's url with a JSON representation of the tuple to update and the attributes, then updates the tuple with the results and runs the callback", function() {
+        var tuple = User.find("dan");
+        var old_first_name = tuple.first_name();
+
+
+        mock(jQuery, "ajax");
+        var update_callback = mock_function("update callback", function(tuple_arg) {
+          expect(tuple_arg).to(equal, tuple);
+          expect(tuple.first_name()).to(equal, "Danny");
+        });
+
+        remote.update(tuple, { first_name: "Danny" }, update_callback);
+
+        expect(jQuery.ajax).to(have_been_called, once);
+        ajax_hash = jQuery.ajax.most_recent_args[0];
+
+        expect(ajax_hash.url).to(equal, remote.url);
+        expect(ajax_hash.type).to(equal, "PUT");
+        expect(JSON.parse(ajax_hash.data.tuple)).to(equal, { set: "users", id: "dan" });
+        expect(JSON.parse(ajax_hash.data.attribute_values)).to(equal, { first_name: "Danny" });
+
+        expect(tuple.first_name()).to(equal, old_first_name);
+
+        ajax_hash.success(JSON.stringify({
+          id: "dan",
+          first_name: "Danny",
+          age: 21
+        }));
+
+        expect(update_callback).to(have_been_called, once);
+        expect(tuple.first_name()).to(equal, "Danny");
+      });
+    });
+
     describe("#pull", function() {
       it("calls #update on June.GlobalDomain with the results of #fetch", function() {
         var snapshot = {
