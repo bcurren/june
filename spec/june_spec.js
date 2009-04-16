@@ -24,6 +24,15 @@ Screw.Unit(function(c) { with(c) {
       });
     });
     
+    describe(".origin", function() {
+      it("sets June.Origin to a new RemoteDomain with the given url", function() {
+        var origin = June.origin("/domain");
+        expect(June.Origin).to(equal, origin);
+        expect(origin.constructor).to(equal, June.RemoteDomain);
+        expect(origin.url).to(equal, "/domain");
+      });
+    });
+    
     describe(".each", function() {
       it("iterates over an array, yielding each element to a function as the value of 'this' and as the argument", function() {
         var array = [1, 2, 3];

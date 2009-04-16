@@ -1,4 +1,4 @@
-//require("/vendor/jquery-1.2.6");
+require("/vendor/jquery-1.2.6");
 require("/vendor/foundation");
 require("/vendor/json");
 
