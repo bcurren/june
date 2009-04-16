@@ -63,14 +63,19 @@ Screw.Unit(function(c) { with(c) {
         }
 
         expect(User.map(function() { return this.first_name() })).to(equal, expected_result);
+        expect(User.map(function(tuple) { return tuple.first_name() })).to(equal, expected_result);
       });
     });
     
     describe("#each", function() {
       it("invokes the given function on each tuple in the relation", function() {
-        var each_tuple = [];
-        var results = User.each(function() { each_tuple.push(this) });
-        expect(each_tuple).to(equal, User.tuples());
+        var this_values = [];
+        var arg_values = [];
+        var results = User.each(function() { this_values.push(this) });
+        var results = User.each(function(tuple) { arg_values.push(tuple) });
+
+        expect(this_values).to(equal, User.tuples());
+        expect(arg_values).to(equal, User.tuples());
       });
     });
 
