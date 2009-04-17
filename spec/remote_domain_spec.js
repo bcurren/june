@@ -14,7 +14,8 @@ Screw.Unit(function(c) { with(c) {
 
 
         mock(jQuery, "ajax");
-        var update_callback = mock_function("update callback", function(tuple_arg) {
+        var update_callback = mock_function("update callback", function(successful, tuple_arg) {
+          expect(successful).to(be_true);
           expect(tuple_arg).to(equal, tuple);
           expect(tuple.first_name()).to(equal, "Danny");
         });
@@ -23,7 +24,6 @@ Screw.Unit(function(c) { with(c) {
 
         expect(jQuery.ajax).to(have_been_called, once);
         ajax_hash = jQuery.ajax.most_recent_args[0];
-
         expect(ajax_hash.url).to(equal, remote.url);
         expect(ajax_hash.type).to(equal, "PUT");
         expect(JSON.parse(ajax_hash.data.tuple)).to(equal, { set: "users", id: "dan" });
@@ -32,9 +32,12 @@ Screw.Unit(function(c) { with(c) {
         expect(tuple.first_name()).to(equal, old_first_name);
 
         ajax_hash.success(JSON.stringify({
-          id: "dan",
-          first_name: "Danny",
-          age: 21
+          successful: true,
+          attribute_values: {
+            id: "dan",
+            first_name: "Danny",
+            age: 21
+          }
         }));
 
         expect(update_callback).to(have_been_called, once);
