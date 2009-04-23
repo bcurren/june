@@ -32,6 +32,17 @@ Screw.Unit(function(c) { with(c) {
         expect(origin.url).to(equal, "/domain");
       });
     });
+
+    describe(".pull", function() {
+      it("delegates to June.Origin.pull", function() {
+        mock(June.Origin, "pull");
+
+        var pull_callback = function() {};
+        June.pull([Pet], pull_callback);
+
+        expect(June.Origin.pull).to(have_been_called, with_args([Pet], pull_callback));
+      });
+    });
     
     describe(".each", function() {
       it("iterates over an array, yielding each element to a function as the value of 'this' and as the argument", function() {
