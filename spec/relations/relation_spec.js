@@ -79,5 +79,15 @@ Screw.Unit(function(c) { with(c) {
       });
     });
 
+
+    describe("#pull", function() {
+      it("calls June.pull with a singleton array containing itself and the given callback", function() {
+        mock(June, 'pull');
+        var pull_callback = function() {};
+        User.pull(pull_callback);
+        
+        expect(June.pull).to(have_been_called, with_args([User], pull_callback));
+      });
+    });
   });
 }});
