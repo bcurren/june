@@ -44,7 +44,7 @@ Screw.Unit(function(c) { with(c) {
       has_one("pet_2", {target_set_name: "Pet", foreign_key_name: "owner_id"});
 
       relates_to_one("pet", function() {
-        return this.pets_relation;
+        return this.pets;
       }),
 
       methods({

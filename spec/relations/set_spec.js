@@ -38,8 +38,8 @@ Screw.Unit(function(c) { with (c) {
           expected_tuples = Pet.where(Pet.owner_id.eq(tuple.id())).tuples();
         });
 
-        it("creates a method with the given name that returns the #tuples of the relation defined by the given function", function() {
-          expect(tuple.pets()).to(equal, expected_tuples);
+        it("assigns the relation defined by the given function to the specified name on the tuple", function() {
+          expect(tuple.pets.tuples()).to(equal, expected_tuples);
         });
 
         it("defines an #each function on the relation method which iterates over the tuples in the relation", function() {
@@ -60,10 +60,6 @@ Screw.Unit(function(c) { with (c) {
           });
           expect(results).to(equal, expected_results);
         });
-
-        it("assigns the relation defined in the given function to the #{relation_name}_relation field on the tuple", function() {
-          expect(tuple.pets_relation.tuples()).to(equal, tuple.pets());
-        });
       });
 
       describe(".relates_to_one", function() {
@@ -73,7 +69,7 @@ Screw.Unit(function(c) { with (c) {
         });
 
         it("defines a method with the given name that returns the first tuple from the relation defined in the given function", function() {
-          expect(person_tuple.pet()).to(equal, person_tuple.pets()[0]);
+          expect(person_tuple.pet()).to(equal, person_tuple.pets.tuples()[0]);
         });
 
         it("assigns the relation defined in the given function to the #{relation_name}_relation field on the tuple", function() {
@@ -92,7 +88,7 @@ Screw.Unit(function(c) { with (c) {
           it("sets up a many-relation with an inferred target Set and foreign key", function() {
             var expected_tuples = Pet.where(Pet.species_id.eq(species_tuple.id())).tuples();
             expect(expected_tuples).to_not(be_empty);
-            expect(species_tuple.pets()).to(equal, expected_tuples);
+            expect(species_tuple.pets.tuples()).to(equal, expected_tuples);
           });
         });
 
@@ -100,7 +96,7 @@ Screw.Unit(function(c) { with (c) {
           it("sets up a many-relation with the requested target Set and foreign key", function() {
             var expected_tuples = Pet.where(Pet.owner_id.eq(person_tuple.id())).tuples();
             expect(expected_tuples).to_not(be_empty);
-            expect(person_tuple.pets_2()).to(equal, expected_tuples);
+            expect(person_tuple.pets_2.tuples()).to(equal, expected_tuples);
           });
         });
       });

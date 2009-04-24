@@ -139,7 +139,7 @@ Screw.Unit(function(c) { with(c) {
 
           before(function() {
             petless_user = User.find("alice");
-            expect(petless_user.pets()).to(be_empty);
+            expect(petless_user.pets.tuples()).to(be_empty);
           });
 
           it("triggers #on_insert handlers with the projected tuple", function() {
@@ -163,7 +163,7 @@ Screw.Unit(function(c) { with(c) {
           before(function() {
             var user = User.find("bob");
             pet = Pet.create({owner_id: "bob"});
-            expect(user.pets().length).to(be_gt, 1);
+            expect(user.pets.tuples().length).to(be_gt, 1);
           });
 
           it("does not trigger #on_remove handlers", function() {
@@ -182,7 +182,7 @@ Screw.Unit(function(c) { with(c) {
           var user, pet;
           before(function() {
             user = User.find("bob")
-            expect(user.pets().length).to(equal, 1);
+            expect(user.pets.tuples().length).to(equal, 1);
             pet = Pet.find("blue");
             expect(pet.owner_id()).to(equal, "bob");
           });
