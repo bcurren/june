@@ -49,17 +49,17 @@ Screw.Unit(function(c) { with(c) {
     });
 
     describe("#first", function() {
-      it("returns the first element of #tuples", function() {
-        expect(User.first()).to(equal, User.tuples()[0]);
+      it("returns the first element of #all", function() {
+        expect(User.first()).to(equal, User.all()[0]);
       });
     });
 
     describe("#map", function() {
       it("returns a new Array built by invoking the given function on each tuple in the relation", function() {
         var expected_result = [];
-        tuples = User.tuples();
-        for(var i = 0; i < tuples.length; i++) {
-          expected_result.push(tuples[i].first_name());
+        all = User.all();
+        for(var i = 0; i < all.length; i++) {
+          expected_result.push(all[i].first_name());
         }
 
         expect(User.map(function() { return this.first_name() })).to(equal, expected_result);
@@ -74,8 +74,8 @@ Screw.Unit(function(c) { with(c) {
         var results = User.each(function() { this_values.push(this) });
         var results = User.each(function(tuple) { arg_values.push(tuple) });
 
-        expect(this_values).to(equal, User.tuples());
-        expect(arg_values).to(equal, User.tuples());
+        expect(this_values).to(equal, User.all());
+        expect(arg_values).to(equal, User.all());
       });
     });
 

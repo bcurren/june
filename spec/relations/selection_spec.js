@@ -10,10 +10,10 @@ Screw.Unit(function(c) { with(c) {
       selection = new June.Relations.Selection(operand, predicate);
     });
 
-    describe("#tuples", function() {
-      it("returns only the #tuples of #operand that match #predicate", function() {
+    describe("#all", function() {
+      it("returns only the #all of #operand that match #predicate", function() {
         var expected_tuples = [];
-        var operand_tuples = operand.tuples();
+        var operand_tuples = operand.all();
 
         for (var i = 0; i < operand_tuples.length; i++) {
           var tuple = operand_tuples[i];
@@ -23,7 +23,7 @@ Screw.Unit(function(c) { with(c) {
         }
 
         expect(expected_tuples).to_not(be_empty);
-        expect(selection.tuples()).to(equal, expected_tuples);
+        expect(selection.all()).to(equal, expected_tuples);
       });
     });
 
@@ -326,7 +326,7 @@ Screw.Unit(function(c) { with(c) {
 
     describe("subscription propagation", function() {
       describe("when a Subscription is registered for the Selection, destroyed, and another Subscription is registered", function() {
-        it("subscribes to its #operand and memoizes #tuples, then unsubscribes and clears the memoization, then resubscribes and rememoizes", function() {
+        it("subscribes to its #operand and memoizes #all, then unsubscribes and clears the memoization, then resubscribes and rememoizes", function() {
           expect(operand.has_subscribers()).to(be_false);
           expect(selection._tuples).to(be_null);
 

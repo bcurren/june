@@ -35,11 +35,11 @@ Screw.Unit(function(c) { with (c) {
         var tuple, expected_tuples;
         before(function() {
           tuple = User.find("dan");
-          expected_tuples = Pet.where(Pet.owner_id.eq(tuple.id())).tuples();
+          expected_tuples = Pet.where(Pet.owner_id.eq(tuple.id())).all();
         });
 
         it("assigns the relation defined by the given function to the specified name on the tuple", function() {
-          expect(tuple.pets.tuples()).to(equal, expected_tuples);
+          expect(tuple.pets.all()).to(equal, expected_tuples);
         });
 
         it("defines an #each function on the relation method which iterates over the tuples in the relation", function() {
@@ -69,11 +69,11 @@ Screw.Unit(function(c) { with (c) {
         });
 
         it("defines a method with the given name that returns the first tuple from the relation defined in the given function", function() {
-          expect(person_tuple.pet()).to(equal, person_tuple.pets.tuples()[0]);
+          expect(person_tuple.pet()).to(equal, person_tuple.pets.all()[0]);
         });
 
         it("assigns the relation defined in the given function to the #{relation_name}_relation field on the tuple", function() {
-          expect(person_tuple.pet_relation.tuples()[0]).to(equal, person_tuple.pet());
+          expect(person_tuple.pet_relation.all()[0]).to(equal, person_tuple.pet());
         });
       });
 
@@ -86,17 +86,17 @@ Screw.Unit(function(c) { with (c) {
 
         describe("when not given options", function() {
           it("sets up a many-relation with an inferred target Set and foreign key", function() {
-            var expected_tuples = Pet.where(Pet.species_id.eq(species_tuple.id())).tuples();
+            var expected_tuples = Pet.where(Pet.species_id.eq(species_tuple.id())).all();
             expect(expected_tuples).to_not(be_empty);
-            expect(species_tuple.pets.tuples()).to(equal, expected_tuples);
+            expect(species_tuple.pets.all()).to(equal, expected_tuples);
           });
         });
 
         describe("when given a target_set_name and a foreign_key_name", function() {
           it("sets up a many-relation with the requested target Set and foreign key", function() {
-            var expected_tuples = Pet.where(Pet.owner_id.eq(person_tuple.id())).tuples();
+            var expected_tuples = Pet.where(Pet.owner_id.eq(person_tuple.id())).all();
             expect(expected_tuples).to_not(be_empty);
-            expect(person_tuple.pets_2.tuples()).to(equal, expected_tuples);
+            expect(person_tuple.pets_2.all()).to(equal, expected_tuples);
           });
         });
       });
@@ -110,7 +110,7 @@ Screw.Unit(function(c) { with (c) {
 
         describe("when not given options", function() {
           it("sets up a many-relation with an inferred target Set and foreign key", function() {
-            var expected_tuple = Pet.where(Pet.species_id.eq(species_tuple.id())).tuples()[0];
+            var expected_tuple = Pet.where(Pet.species_id.eq(species_tuple.id())).all()[0];
             expect(expected_tuple).to_not(be_null);
             expect(species_tuple.pet()).to(equal, expected_tuple);
           });
@@ -118,7 +118,7 @@ Screw.Unit(function(c) { with (c) {
 
         describe("when given a target_set_name and a foreign_key_name", function() {
           it("sets up a many-relation with the requested target Set and foreign key", function() {
-            var expected_tuple = Pet.where(Pet.owner_id.eq(person_tuple.id())).tuples()[0];
+            var expected_tuple = Pet.where(Pet.owner_id.eq(person_tuple.id())).all()[0];
             expect(expected_tuple).to_not(be_null);
             expect(person_tuple.pet_2()).to(equal, expected_tuple);
           });
@@ -152,11 +152,11 @@ Screw.Unit(function(c) { with (c) {
       });
     });
 
-    describe("#tuples", function() {
+    describe("#all", function() {
       it("returns a copy of the sets tuples", function() {
-        var tuples_copy = User.tuples();
+        var tuples_copy = User.all();
         tuples_copy.push(1);
-        expect(User.tuples()).to_not(equal, tuples_copy);
+        expect(User.all()).to_not(equal, tuples_copy);
       });
     });
 
@@ -200,8 +200,8 @@ Screw.Unit(function(c) { with (c) {
         expect(tuple.age()).to(equal, 25)
       });
 
-      it("adds the created object to #tuples", function() {
-        expect(User.tuples().indexOf(tuple)).to_not(equal, -1);
+      it("adds the created object to #all", function() {
+        expect(User.all().indexOf(tuple)).to_not(equal, -1);
       });
 
       it("does not trigger #on_update handlers while initializing the fields of the created tuple", function() {
@@ -210,20 +210,20 @@ Screw.Unit(function(c) { with (c) {
     });
 
     describe("#insert", function() {
-      it("adds the created object to #tuples", function() {
+      it("adds the created object to #all", function() {
         var tuple = new User.Tuple({
           age: 25,
           first_name: "Ryan"
         });
-        expect(User.tuples().indexOf(tuple)).to(equal, -1);
+        expect(User.all().indexOf(tuple)).to(equal, -1);
         User.insert(tuple);
-        expect(User.tuples().indexOf(tuple)).to_not(equal, -1);
+        expect(User.all().indexOf(tuple)).to_not(equal, -1);
       });
     });
 
     describe("#remove", function() {
-      describe("when given a tuple in #tuples", function() {
-        it("removes the given object from #tuples", function() {
+      describe("when given a tuple in #all", function() {
+        it("removes the given object from #all", function() {
           var tuple = User.find("bob")
           expect(tuple).to_not(be_null);
           User.remove(tuple);
@@ -231,7 +231,7 @@ Screw.Unit(function(c) { with (c) {
         });
       });
 
-      describe("when given an object not in #tuples", function() {
+      describe("when given an object not in #all", function() {
         it("returns null", function() {
           expect(User.remove("nothing")).to(equal, null);
         });
