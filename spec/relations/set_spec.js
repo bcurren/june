@@ -175,6 +175,19 @@ Screw.Unit(function(c) { with (c) {
       });
     });
 
+    describe("#create", function() {
+      it("proxies to June.Origin.create with itself as the set", function() {
+        June.origin("/domain");
+        mock(June.Origin, 'create');
+
+        var create_callback = function() {};
+        var attribute_values = {first_name: "Johnny", age: 0};
+        User.create(attribute_values, create_callback);
+        
+        expect(June.Origin.create).to(have_been_called, with_args(User, attribute_values, create_callback));
+      });
+    });
+
     describe("#local_create", function() {
       var tuple, update_handler;
       before(function() {
