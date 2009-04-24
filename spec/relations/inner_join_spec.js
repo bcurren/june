@@ -71,8 +71,8 @@ Screw.Unit(function(c) { with(c) {
         context("when a tuple is inserted into the left operand", function() {
           context("when the insertion causes #cartesean_product to contain a new CompositeTuple that matches the predicate", function() {
             it("triggers #on_insert handlers with the new CompositeTuple", function() {
-              var right_tuple = Pet.create({owner_id: "amy"});
-              var left_tuple = User.create({id: "amy"});
+              var right_tuple = Pet.local_create({owner_id: "amy"});
+              var left_tuple = User.local_create({id: "amy"});
 
               expect(insert_handler).to(have_been_called, once);
               var composite_tuple = insert_handler.most_recent_args[0];
@@ -85,20 +85,20 @@ Screw.Unit(function(c) { with(c) {
                 expect(join.contains(composite_tuple)).to(be_true);
               });
 
-              Pet.create({owner_id: "amy"});
-              User.create({id: "amy"});
+              Pet.local_create({owner_id: "amy"});
+              User.local_create({id: "amy"});
             });
           });
 
           context("when the insertion does NOT cause #cartesean_product to contain a new CompositeTuple that matches the predicate", function() {
             it("does not trigger #on_insert handlers", function() {
-              User.create({id: "amy"});
+              User.local_create({id: "amy"});
               expect(insert_handler).to_not(have_been_called);
             });
 
             it("does not modify the contents of #all", function() {
               var num_tuples_before_insertion = join.all().length;
-              User.create({id: "amy"});
+              User.local_create({id: "amy"});
               expect(join.all().length).to(equal, num_tuples_before_insertion);
             });
           });
@@ -107,8 +107,8 @@ Screw.Unit(function(c) { with(c) {
         context("when a tuple is inserted into the right operand", function() {
           context("when the insertion causes #cartesean_product to contain a new CompositeTuple that matches the predicate", function() {
             it("triggers #on_insert handlers with the new CompositeTuple", function() {
-              var left_tuple = User.create({id: "amy"});
-              var right_tuple = Pet.create({owner_id: "amy"});
+              var left_tuple = User.local_create({id: "amy"});
+              var right_tuple = Pet.local_create({owner_id: "amy"});
 
               expect(insert_handler).to(have_been_called, once);
               var composite_tuple = insert_handler.most_recent_args[0];
@@ -121,20 +121,20 @@ Screw.Unit(function(c) { with(c) {
                 expect(join.contains(composite_tuple)).to(be_true);
               });
 
-              User.create({id: "amy"});
-              Pet.create({owner_id: "amy"});
+              User.local_create({id: "amy"});
+              Pet.local_create({owner_id: "amy"});
             });
           });
 
           context("when the insertion does NOT cause #cartesean_product to contain a new CompositeTuple that matches the predicate", function() {
             it("does not trigger #on_insert handlers", function() {
-              Pet.create({owner_id: "amy"});
+              Pet.local_create({owner_id: "amy"});
               expect(insert_handler).to_not(have_been_called);
             });
 
             it("does not modify the contents of #all", function() {
               var num_tuples_before_insertion = join.all().length;
-              Pet.create({owner_id: "amy"});
+              Pet.local_create({owner_id: "amy"});
               expect(join.all().length).to(equal, num_tuples_before_insertion);
             });
           });
@@ -279,7 +279,7 @@ Screw.Unit(function(c) { with(c) {
               var right_tuple, left_tuple;
 
               before(function() {
-                right_tuple = Pet.create({owner_id: "amanda"});
+                right_tuple = Pet.local_create({owner_id: "amanda"});
                 left_tuple = User.find("alice");
               });
 

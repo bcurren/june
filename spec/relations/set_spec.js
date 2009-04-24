@@ -4,12 +4,12 @@ Screw.Unit(function(c) { with (c) {
   describe("Relations.Set", function() {
     var tuple;
     before(function() {
-      tuple = User.create({id: "fonz"});
+      tuple = User.local_create({id: "fonz"});
     });
 
     describe("metaprogrammatic declarations", function() {
       describe(".attributes", function() {
-        it("creates an Attribute object with the given name and type with on the Set for each declared Attribute", function() {
+        it("local_creates an Attribute object with the given name and type with on the Set for each declared Attribute", function() {
           first_name_attribute = User.first_name
           expect(first_name_attribute).to(equal, User.attributes.first_name);
           expect(first_name_attribute.constructor).to(equal, June.Attribute);
@@ -18,7 +18,7 @@ Screw.Unit(function(c) { with (c) {
           expect(first_name_attribute.set).to(equal, User);
         });
 
-        it("creates an accessor method for each declared attribute on the Set's generated Tuple constructor", function() {
+        it("local_creates an accessor method for each declared attribute on the Set's generated Tuple constructor", function() {
           tuple.first_name("Jan");
           expect(tuple.first_name()).to(equal, "Jan");
         });
@@ -163,7 +163,7 @@ Screw.Unit(function(c) { with (c) {
     describe("#find", function() {
       describe("when passed the id of a tuple in the Set", function() {
         it("returns the tuple with that id", function() {
-          var user = User.create({id: "george", first_name: "George"});
+          var user = User.local_create({id: "george", first_name: "George"});
           expect(User.find("george")).to(equal, user);
         });
       });
@@ -175,13 +175,13 @@ Screw.Unit(function(c) { with (c) {
       });
     });
 
-    describe("#create", function() {
+    describe("#local_create", function() {
       var tuple, update_handler;
       before(function() {
         update_handler = mock_function("update handler");
         User.on_update(update_handler);
 
-        tuple = User.create({
+        tuple = User.local_create({
           age: 25,
           first_name: "Ryan"
         });
@@ -200,17 +200,17 @@ Screw.Unit(function(c) { with (c) {
         expect(tuple.age()).to(equal, 25)
       });
 
-      it("adds the created object to #all", function() {
+      it("adds the local_created object to #all", function() {
         expect(User.all().indexOf(tuple)).to_not(equal, -1);
       });
 
-      it("does not trigger #on_update handlers while initializing the fields of the created tuple", function() {
+      it("does not trigger #on_update handlers while initializing the fields of the local_created tuple", function() {
         expect(update_handler).to_not(have_been_called);
       });
     });
 
     describe("#insert", function() {
-      it("adds the created object to #all", function() {
+      it("adds the local_created object to #all", function() {
         var tuple = new User.Tuple({
           age: 25,
           first_name: "Ryan"
@@ -329,7 +329,7 @@ Screw.Unit(function(c) { with (c) {
 
         User.pause_events();
 
-        var tuple = User.create({id: "kunal", first_name: "Kunal"});
+        var tuple = User.local_create({id: "kunal", first_name: "Kunal"});
         tuple.first_name("Lanuk");
         tuple.destroy();
 
@@ -350,7 +350,7 @@ Screw.Unit(function(c) { with (c) {
         expect(remove_handler).to(have_been_called, with_args(tuple));
 
         insert_handler.clear();
-        var tuple_2 = User.create({id: "nathan", first_name: "Nathan"});
+        var tuple_2 = User.local_create({id: "nathan", first_name: "Nathan"});
 
         expect(insert_handler).to(have_been_called, once);
         expect(insert_handler).to(have_been_called, with_args(tuple_2));
@@ -428,7 +428,7 @@ Screw.Unit(function(c) { with (c) {
           var insert_handler = mock_function("insert handler");
           User.on_insert(insert_handler);
 
-          var tuple = User.create({id: "emma", first_name: "Emma"});
+          var tuple = User.local_create({id: "emma", first_name: "Emma"});
           expect(insert_handler).to(have_been_called, once);
           expect(insert_handler).to(have_been_called, with_args(tuple));
         });

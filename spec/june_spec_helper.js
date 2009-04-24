@@ -78,19 +78,19 @@ Screw.Unit(function(c) { with(c) {
       has_one("pet");
     }});
 
-    User.create({id: "dan", first_name: "Dan", age: 21});
-    User.create({id: "bob", first_name: "Bob", age: 21});
-    User.create({id: "joe", first_name: "Joe", age: 21});
-    User.create({id: "alice", first_name: "Alice", age: 22});
-    User.create({id: "jean", first_name: "Jean", age: 22});
+    User.local_create({id: "dan", first_name: "Dan", age: 21});
+    User.local_create({id: "bob", first_name: "Bob", age: 21});
+    User.local_create({id: "joe", first_name: "Joe", age: 21});
+    User.local_create({id: "alice", first_name: "Alice", age: 22});
+    User.local_create({id: "jean", first_name: "Jean", age: 22});
 
-    Pet.create({id: "fido", name: "Fido", owner_id: "dan", species_id: "dog"});
-    Pet.create({id: "cleo", name: "Cleo", owner_id: "dan", species_id: "fish"});
-    Pet.create({id: "blue", name: "Blue", owner_id: "bob", species_id: "dog"});
-    Pet.create({id: "stray", name: "Unknown", owner_id: null, species_id: "dog"});
+    Pet.local_create({id: "fido", name: "Fido", owner_id: "dan", species_id: "dog"});
+    Pet.local_create({id: "cleo", name: "Cleo", owner_id: "dan", species_id: "fish"});
+    Pet.local_create({id: "blue", name: "Blue", owner_id: "bob", species_id: "dog"});
+    Pet.local_create({id: "stray", name: "Unknown", owner_id: null, species_id: "dog"});
 
-    Species.create({id: "dog", name: "Dog"});
-    Species.create({id: "fish", name: "Fish"});
+    Species.local_create({id: "dog", name: "Dog"});
+    Species.local_create({id: "fish", name: "Fish"});
   });
 
 

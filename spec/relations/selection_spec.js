@@ -117,7 +117,7 @@ Screw.Unit(function(c) { with(c) {
       context("when a tuple is inserted in the Selection's #operand", function() {
         context("when that tuple matches #predicate", function() {
           it("triggers #on_insert handlers with the inserted tuple", function() {
-            tuple = operand.create({id: "mike", age: 21});
+            tuple = operand.local_create({id: "mike", age: 21});
             expect(predicate.evaluate(tuple)).to(be_true);
             
             expect(insert_handler).to(have_been_called, with_args(tuple));
@@ -136,7 +136,7 @@ Screw.Unit(function(c) { with(c) {
 
         context("when that tuple does not match #predicate", function() {
           it("does not trigger #on_insert handlers", function() {
-            tuple = operand.create({id: "mike", age: 22});
+            tuple = operand.local_create({id: "mike", age: 22});
             expect(predicate.evaluate(tuple)).to(be_false);
 
             expect(insert_handler).to_not(have_been_called);

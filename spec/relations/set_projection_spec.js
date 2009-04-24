@@ -123,13 +123,13 @@ Screw.Unit(function(c) { with(c) {
       context("when a CompositeTuple is inserted in the Projection's #operand", function() {
         context("when the projected tuple is already a member of #all", function() {
           it("does not trigger #on_insert handlers", function() {
-            Pet.create({owner_id: "bob"});
+            Pet.local_create({owner_id: "bob"});
             expect(insert_handler).to_not(have_been_called);
           });
 
           it("does not modify #all", function() {
             var num_tuples_before_insert = projection.all().length;
-            Pet.create({owner_id: "bob"});
+            Pet.local_create({owner_id: "bob"});
             expect(projection.all().length).to(equal, num_tuples_before_insert);
           });
         });
@@ -143,7 +143,7 @@ Screw.Unit(function(c) { with(c) {
           });
 
           it("triggers #on_insert handlers with the projected tuple", function() {
-            Pet.create({owner_id: petless_user.id()});
+            Pet.local_create({owner_id: petless_user.id()});
             expect(insert_handler).to(have_been_called, once);
             expect(insert_handler).to(have_been_called, with_args(petless_user));
           });
@@ -152,7 +152,7 @@ Screw.Unit(function(c) { with(c) {
             projection.on_insert(function(tuple) {
               expect(projection.contains(tuple)).to(be_true);
             });
-            Pet.create({owner_id: petless_user.id()});
+            Pet.local_create({owner_id: petless_user.id()});
           });
         });
       });
@@ -162,7 +162,7 @@ Screw.Unit(function(c) { with(c) {
           var pet;
           before(function() {
             var user = User.find("bob");
-            pet = Pet.create({owner_id: "bob"});
+            pet = Pet.local_create({owner_id: "bob"});
             expect(user.pets.all().length).to(be_gt, 1);
           });
 
