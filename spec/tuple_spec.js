@@ -15,7 +15,16 @@ Screw.Unit(function(c) { with(c) {
         expect(User.remove).to(have_been_called, with_args(tuple));
       });
     });
-    
+
+    describe(".on_update on field accessor methods", function() {
+//      it("proxies to .on_update on the field corresponding to the accessor", function() {
+//        mock(tuple.fields.first_name, 'on_update');
+//        var update_callback = mock_function("update callback");
+//        tuple.first_name.on_update(update_callback);
+//        expect(tuple.fields.first_name.on_update).to(have_been_called, with_args(update_callback));
+//      });
+    });
+
     describe("#get_field_value", function() {
       describe("when called with an Attribute that is defined on the Set", function() {
         it("retrieves the value in the corresponding Field", function() {
