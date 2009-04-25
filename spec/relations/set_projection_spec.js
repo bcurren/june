@@ -315,17 +315,9 @@ Screw.Unit(function(c) { with(c) {
 
           context("when it is the last subscription to be destroyed", function() {
             it("destroys the #on_insert, #on_remove, and #on_update subscriptions on #operand", function() {
-              expect(projection.operand_subscriptions).to_not(be_empty);
-              jQuery.each(projection.operand_subscriptions, function() {
-                mock(this, 'destroy');
-              });
-
+              mock(projection.operand_subscription_bundle, 'destroy_all')
               subscription.destroy();
-
-              jQuery.each(projection.operand_subscriptions, function() {
-                expect(this.destroy).to(have_been_called);
-              });
-              expect(projection.operand_subscriptions).to(be_empty);
+              expect(projection.operand_subscription_bundle.destroy_all).to(have_been_called);
             });
           });
 
@@ -335,17 +327,9 @@ Screw.Unit(function(c) { with(c) {
             });
 
             it("does not destroy the #on_insert and #on_update subscriptions on #operand", function() {
-              expect(projection.operand_subscriptions).to_not(be_empty);
-              jQuery.each(projection.operand_subscriptions, function() {
-                mock(this, 'destroy');
-              });
-
+              mock(projection.operand_subscription_bundle, 'destroy_all')
               subscription.destroy();
-
-              jQuery.each(projection.operand_subscriptions, function() {
-                expect(this.destroy).to_not(have_been_called);
-              });
-              expect(projection.operand_subscriptions).to_not(be_empty);
+              expect(projection.operand_subscription_bundle.destroy_all).to_not(have_been_called);
             });
           });
         });
@@ -398,17 +382,9 @@ Screw.Unit(function(c) { with(c) {
 
           context("when it is the last subscription to be destroyed", function() {
             it("destroys the #on_insert and #on_update subscriptions on #operand", function() {
-              expect(projection.operand_subscriptions).to_not(be_empty);
-              jQuery.each(projection.operand_subscriptions, function() {
-                mock(this, 'destroy');
-              });
-
+              mock(projection.operand_subscription_bundle, 'destroy_all')
               subscription.destroy();
-
-              jQuery.each(projection.operand_subscriptions, function() {
-                expect(this.destroy).to(have_been_called);
-              });
-              expect(projection.operand_subscriptions).to(be_empty);
+              expect(projection.operand_subscription_bundle.destroy_all).to(have_been_called);
             });
           });
 
@@ -418,17 +394,9 @@ Screw.Unit(function(c) { with(c) {
             });
 
             it("does not destroy the #on_insert and #on_update subscriptions on #operand", function() {
-              expect(projection.operand_subscriptions).to_not(be_empty);
-              jQuery.each(projection.operand_subscriptions, function() {
-                mock(this, 'destroy');
-              });
-
+              mock(projection.operand_subscription_bundle, 'destroy_all')
               subscription.destroy();
-
-              jQuery.each(projection.operand_subscriptions, function() {
-                expect(this.destroy).to_not(have_been_called);
-              });
-              expect(projection.operand_subscriptions).to_not(be_empty);
+              expect(projection.operand_subscription_bundle.destroy_all).to_not(have_been_called);
             });
           });
         });
@@ -481,17 +449,9 @@ Screw.Unit(function(c) { with(c) {
 
           context("when it is the last subscription to be destroyed", function() {
             it("destroys the #on_insert and #on_update subscriptions on #operand", function() {
-              expect(projection.operand_subscriptions).to_not(be_empty);
-              jQuery.each(projection.operand_subscriptions, function() {
-                mock(this, 'destroy');
-              });
-
+              mock(projection.operand_subscription_bundle, 'destroy_all')
               subscription.destroy();
-
-              jQuery.each(projection.operand_subscriptions, function() {
-                expect(this.destroy).to(have_been_called);
-              });
-              expect(projection.operand_subscriptions).to(be_empty);
+              expect(projection.operand_subscription_bundle.destroy_all).to(have_been_called);
             });
           });
 
@@ -501,17 +461,9 @@ Screw.Unit(function(c) { with(c) {
             });
 
             it("does not destroy the #on_insert and #on_update subscriptions on #operand", function() {
-              expect(projection.operand_subscriptions).to_not(be_empty);
-              jQuery.each(projection.operand_subscriptions, function() {
-                mock(this, 'destroy');
-              });
-
-              subscription.destroy();
-
-              jQuery.each(projection.operand_subscriptions, function() {
-                expect(this.destroy).to_not(have_been_called);
-              });
-              expect(projection.operand_subscriptions).to_not(be_empty);
+              mock(projection.operand_subscription_bundle, 'destroy_all')
+              subscription.destroy  ();
+              expect(projection.operand_subscription_bundle.destroy_all).to_not(have_been_called);
             });
           });
         });

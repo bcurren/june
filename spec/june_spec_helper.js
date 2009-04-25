@@ -4,6 +4,7 @@ require("/vendor/json");
 
 require("/lib/june/string");
 require("/lib/june/subscription_node");
+require("/lib/june/subscription_bundle");
 require("/lib/june/subscription");
 require("/lib/june/domain");
 require("/lib/june/remote_domain");
