@@ -33,6 +33,26 @@ Screw.Unit(function(c) { with(c) {
       });
     });
 
+    describe("#order_by", function() {
+      context("when called with just an Attribute", function() {
+        it("builds an Ordering with self as #operand, the given Attribute as #attribute, and 'asc' as #direction", function() {
+          var ordering = User.order_by(User.name);
+          expect(ordering.constructor).to(equal, June.Relations.Ordering);
+          expect(ordering.attribute()).to(equal, User.name);
+          expect(ordering.direction()).to(equal, "asc");
+        });
+      });
+
+      context("when called with an Attribute and a Direction", function() {
+        it("builds an Ordering with self as #operand, the given Attribute as #attribute, and the given direction as #direction", function() {
+          var ordering = User.order_by(User.name, "desc");
+          expect(ordering.constructor).to(equal, June.Relations.Ordering);
+          expect(ordering.attribute()).to(equal, User.name);
+          expect(ordering.direction()).to(equal, "desc");
+        });
+      });
+    });
+
     describe("#find", function() {
       context("when passed an id", function() {
         it("returns the first element of a selection where relation.id is equal to the given id", function() {
