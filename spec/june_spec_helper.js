@@ -18,6 +18,7 @@ require("/lib/june/relations/set_configuration");
 require("/lib/june/relations/selection");
 require("/lib/june/relations/inner_join");
 require("/lib/june/relations/set_projection");
+require("/lib/june/relations/ordering");
 require("/lib/june/predicates/binary_predicate_methods");
 require("/lib/june/predicates/predicate_methods");
 require("/lib/june/predicates/equal_to");
@@ -79,11 +80,11 @@ Screw.Unit(function(c) { with(c) {
       has_one("pet");
     }});
 
-    User.local_create({id: "dan", first_name: "Dan", age: 21});
-    User.local_create({id: "bob", first_name: "Bob", age: 21});
-    User.local_create({id: "joe", first_name: "Joe", age: 21});
     User.local_create({id: "alice", first_name: "Alice", age: 22});
-    User.local_create({id: "jean", first_name: "Jean", age: 22});
+    User.local_create({id: "dan", first_name: "Dan", age: 21});
+    User.local_create({id: "bob", first_name: "Bob", age: 20});
+    User.local_create({id: "joe", first_name: "Joe", age: 19});
+    User.local_create({id: "jean", first_name: "Jean", age: 23});
 
     Pet.local_create({id: "fido", name: "Fido", owner_id: "dan", species_id: "dog"});
     Pet.local_create({id: "cleo", name: "Cleo", owner_id: "dan", species_id: "fish"});
