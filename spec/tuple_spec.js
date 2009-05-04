@@ -16,13 +16,44 @@ Screw.Unit(function(c) { with(c) {
       });
     });
 
-    describe(".on_update on field accessor methods", function() {
-//      it("proxies to .on_update on the field corresponding to the accessor", function() {
-//        mock(tuple.fields.first_name, 'on_update');
-//        var update_callback = mock_function("update callback");
-//        tuple.first_name.on_update(update_callback);
-//        expect(tuple.fields.first_name.on_update).to(have_been_called, with_args(update_callback));
-//      });
+    describe("#on_update", function() {
+      context("when an event handler has been registered for a particular Attribute", function() {
+        var tuple, update_handler, update_subscription;
+
+        before(function() {
+          tuple = User.find("bob");
+          update_handler = mock_function("age update handler");
+          update_subscription = tuple.on_update("age", update_handler);
+        });
+
+        context("when a Field associated with the named Attribute is updated", function() {
+          it("triggers the event handler with the Field's new value and old value", function() {
+            var old_value = tuple.age();
+            var new_value = 45;
+            expect(old_value).to_not(equal, new_value);
+            
+            tuple.age(new_value);
+            expect(update_handler).to(have_been_called, with_args(new_value, old_value));
+          });
+        });
+
+        context("when the subscription has been destroyed", function() {
+          before(function() {
+            update_subscription.destroy();
+          });
+
+          context("when a Field associated with the named Attribute is updated", function() {
+            it("does not trigger the event handler", function() {
+              var old_value = tuple.age();
+              var new_value = 45;
+              expect(old_value).to_not(equal, new_value);
+
+              tuple.age(new_value);
+              expect(update_handler).to_not(have_been_called);
+            });
+          });
+        });
+      });
     });
 
     describe("#get_field_value", function() {
